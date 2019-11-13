@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+    border-style: outset;
+    border-width: 5px;
+    background-color: lightskyblue;
+    align-items: center;
+    height: 100px;
+    margin: auto;
+}
+
+.startbutton {
+    font-size: 15px;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    transition-duration: 0.5s;
+    cursor: pointer;
+    border: 1px solid white;
+}
+
+    .startbutton:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+    }
+
+
+.stafflogin {
+    border-style: outset;
+    border-width: 5px;
+    background-color: lightgray;
+    width: 500px;
+    margin: auto;
+    display: block;
+}
+
+.form {
+    align-content: center;
+}

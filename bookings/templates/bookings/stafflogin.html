@@ -1,0 +1,25 @@
+﻿<html>
+<head>
+    <title>Login</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'staffloginstyle.css' %}" />
+</head>
+
+<body>
+    <div class="navbar">
+        <h1 align="center"><b>Staff Login Page</b></h1>
+        <form align="right" action="/">
+            <input class="startbutton" type="submit" value="Start Page"/>
+        </form>
+    </div>
+
+    <div class="stafflogin">
+        <p align="center"><strong>Enter username and password to login.</strong></p>
+        <form align="center" method="post" action="staffhome/">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p><input type="submit" value="Log in"></p>
+        </form>
+    </div>
+</body>
+</html>
