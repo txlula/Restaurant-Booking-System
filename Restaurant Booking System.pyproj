@@ -33,6 +33,9 @@
   <ItemGroup>
     <Compile Include="bookings\admin.py" />
     <Compile Include="bookings\apps.py" />
+    <Compile Include="bookings\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="bookings\migrations\__init__.py" />
     <Compile Include="bookings\models.py" />
     <Compile Include="bookings\tests.py" />

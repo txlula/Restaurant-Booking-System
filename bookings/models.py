@@ -31,7 +31,7 @@ class Reservation(models.Model):
     reservationID = models.AutoField(primary_key=True)
     no_of_people = models.PositiveIntegerField()
     date_of_booking = models.DateField()
-    time_of_booking = models.DateTimeField(unique=True)
+    time_of_booking = models.TimeField(unique=True)
     Person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
 #Dish Model
@@ -39,7 +39,6 @@ class Dish(models.Model):
 	dishID = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=200)
 	price = models.DecimalField(max_digits=5, decimal_places=2)
-Restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
 #Order Model
 class Order(models.Model):
@@ -48,24 +47,37 @@ class Order(models.Model):
     address = models.TextField()
     Dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
 
+#Form to reserve with Reservation Model
+class ReserveForm(ModelForm):
+    class Meta:
+        model = Reservation
+        fields = ['no_of_people', 'date_of_booking', 'time_of_booking']
+
+#Form for customer's input when reserving
+class CustomerForm(ModelForm):
+    class Meta:
+        model = Person
+        fields = ['first_name', 'second_name', 'phone_no', 'email']
+
 #Form to register staff with Account Model
 class RegisterStaffAccountForm(ModelForm):
     password = forms.CharField(max_length=20, widget=forms.PasswordInput)
     class Meta:
         model = Account
-        fields = '__all__'
+        fields = ['username', 'password']
 
 #Form to register staff with Person Model
 class RegisterStaffForm(ModelForm):
     email = forms.EmailField(max_length=300, widget=forms.EmailInput)
     class Meta:
         model = Person
-        fields = '__all__'
+        fields = ['first_name', 'second_name', 'phone_no', 'email']
 
 #Form to login staff
 class LoginStaffAccountForm(ModelForm):
     password = forms.CharField(max_length=20, widget=forms.PasswordInput)
     class Meta:
         model = Account
-        fields = '__all__'
+        fields = ['username', 'password']
+
 

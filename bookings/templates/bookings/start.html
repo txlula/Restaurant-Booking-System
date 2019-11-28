@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'startstyle.css' %}" />
 </head>
 <body>
+
     <div class="title">
         <h1 align ="center">Restaurant Booking System</h1>
     </div>
@@ -14,7 +15,8 @@
 
         <!--Staff Login-->
         <p align="center"><font size="4">Staff login</font></p>
-        <form align="center" action="stafflogin/">
+        <form align="center" action="stafflogin/" method="post">
+            {% csrf_token %}
             <input class="redirectstafflogin" type="submit" value="Staff Log in"/>
         </form>
 
@@ -22,23 +24,48 @@
 
         <!--Staff register-->
         <p align="center"><font size="4">Staff register</font></p>
-        <form align="center" action="staffregister/">
+        <form align="center" action="staffregister/" method="post">
+            {% csrf_token %}
             <input class="redirectstaffregister" type="submit" value="Staff Register"/>
         </form>
     </div>
 
     <!--
-    <h2 align="center">Pick a date:</h2>
+            <h2 align="center">Pick a date:</h2>
     <input align="center" type="date" class="revdate"/>  
-    -->
-    <div class="searchrestaurant">
-        <h1>Search for a restaurant here</h1>
-        <input type="text" class="searchrestaurant" placeholder="Search for a restaurant"/>
-    </div>
-    <table>
-        <tr>
+            <input type="text" class="searchrestaurant" placeholder="Search for a restaurant"/>
 
-        </tr>
-    </table>
+        <div class="searchrestaurant">
+    </div>
+    -->
+
+    <!--Searching up for a restaurant box-->
+
+    <div class="searchrestaurant">  
+            
+            <table>
+                { % for restaurant in restaurants %}
+                    <tr>
+                        <td>{{ restaurant.name }}</td>
+                    </tr>
+                { % endfor % }}
+            </table>
+
+            <button id="reservebtn" class="reservebtn">Reserve</button>
+            <button id="orderbtn" class="orderbtn">Order</button>
+            
+            <!--Reserve-->
+            <div id="reserve_restaurant1box" class="reserve_restaurant1box">
+                <div id ="reserve_restaurant1content" class="reserve_restaurant1content">
+                    <h2 align="center">Reserve</h2>
+                    <form action="" align="center" method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <p align="center"><input type="submit" value="Reserve" /></p>
+                    </form>
+                    <button align="center" id="reserve_close1">Close</button>
+                </div>
+            </div>
+    </div>
 </body>
 </html>

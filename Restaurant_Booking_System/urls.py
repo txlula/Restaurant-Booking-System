@@ -25,9 +25,10 @@ from django.urls import path, re_path, include
 
 urlpatterns = [
     # Uncomment the next line to enable the admin:
-    #path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
     re_path(r'^$', views.start, name='start'),
     re_path(r'stafflogin/$', views.staffloginscreen, name='stafflogin'),
     re_path(r'staffregister/$', views.staffregister, name='staffregister'),
     re_path(r'staffhome/$', views.staffhome, name='staffhome'),
+    re_path(r'content/$', views.content, name='content'),
 ]

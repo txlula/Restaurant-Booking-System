@@ -18,10 +18,10 @@ body {
     border-width: 5px;
     background-color: #A633FF;
     align-items: center;
-    position: absolute;
     left: 10px;
     width: 300px;
     height: 440px;
+    float: left;
 }
 
 /*Staff login button*/
@@ -36,11 +36,11 @@ body {
     border: 1px solid white;
 }
 
-    .redirectstafflogin:hover {
-        background-color: white;
-        color: black;
-        border: 1px solid black;
-    }
+.redirectstafflogin:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
 
 /*Staff register button*/
 .redirectstaffregister {
@@ -54,30 +54,101 @@ body {
     border: 1px solid black;
 }
 
-    .redirectstaffregister:hover {
-        background-color: black;
-        color: white;
-        border: 1px solid white;
-    }
+.redirectstaffregister:hover {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
 
-
+/*Searching restaurant block*/
 .searchrestaurant {
-    align-self: auto;
     border-style: outset;
     border-width: 5px;
     background-color: #33AAFF;
-    grid-template: 150px;
-    width: 500px;
-    height: 200px;
+    width: 920px;
+    height: 440px;
+    align-items: center;
+    float: right;
+}
+
+/*Reserve for restaurant 1 box*/
+.reserve_restaurant1box {
+    display: none;
+    z-index: 1;
+    left: 350px;
+    top: 20px;
+    position: fixed;
+    background-color: deepskyblue;
+    width: 50%;
+    height: 90%;
+    border: 3px solid black;
+    align-items: center;
+    overflow: auto;
+}
+
+.reserve_restaurant1content {
+    padding: 50px;
+    margin: auto;
+    width: 80%;
+    height: 80%;
+    align-items: center;
+}
+
+/*Order for restaurant 1 box*/
+.order_restaurant1box {
+    display: none;
+    z-index: 1;
+    left: 350px;
+    top: 20px;
+    position: fixed;
+    background-color: deepskyblue;
+    width: 50%;
+    height: 90%;
+    border: 3px solid black;
+    align-items: center;
+    overflow: auto;
+}
+
+.order_restaurant1content {
+    padding: 50px;
+    margin: auto;
+    width: 80%;
+    height: 80%;
+    align-items: center;
+}
+
+/*Reserve button*/
+.reservebtn {
     padding: 10px 20px;
+    font-size: 15px;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    transition-duration: 0.5s;
+    cursor: pointer;
+    border: 1px solid white;
 }
 
-table{
-    align-self: auto;
-    border: 1px solid black;
+.reservebtn:hover {
     background-color: white;
+    color: black;
+    border: 1px solid black;
 }
 
-th, td{
-    padding: 20px;
+/*Order button*/
+.orderbtn {
+    padding: 10px 20px;
+    font-size: 15px;
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    transition-duration: 0.5s;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.orderbtn:hover {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
 }
