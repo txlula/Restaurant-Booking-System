@@ -71,50 +71,8 @@ body {
     float: right;
 }
 
-/*Reserve for restaurant 1 box*/
-.reserve_restaurant1box {
-    display: none;
-    z-index: 1;
-    left: 350px;
-    top: 20px;
-    position: fixed;
-    background-color: deepskyblue;
-    width: 50%;
-    height: 90%;
-    border: 3px solid black;
-    align-items: center;
-    overflow: auto;
-}
-
-.reserve_restaurant1content {
-    padding: 50px;
-    margin: auto;
-    width: 80%;
-    height: 80%;
-    align-items: center;
-}
-
-/*Order for restaurant 1 box*/
-.order_restaurant1box {
-    display: none;
-    z-index: 1;
-    left: 350px;
-    top: 20px;
-    position: fixed;
-    background-color: deepskyblue;
-    width: 50%;
-    height: 90%;
-    border: 3px solid black;
-    align-items: center;
-    overflow: auto;
-}
-
-.order_restaurant1content {
-    padding: 50px;
-    margin: auto;
-    width: 80%;
-    height: 80%;
-    align-items: center;
+.table, th, td{
+    border: 1px solid black;
 }
 
 /*Reserve button*/

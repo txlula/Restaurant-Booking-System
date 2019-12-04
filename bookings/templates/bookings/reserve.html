@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+    <title>Home</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'reservestyle.css' %}" />
+</head>
+<body>
+    <div class="navbar">
+        <h1 align="center"><b>Reserve</b></h1>
+        <form align="right" action="/">
+            <input class="startbutton" type="submit" value="Start Page"/>
+        </form>
+    </div>
+
+    <div class="reserveblock">
+        <form align="center" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </form>
+    </div>
+</body>
+</html>

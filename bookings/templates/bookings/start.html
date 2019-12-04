@@ -41,31 +41,21 @@
 
     <!--Searching up for a restaurant box-->
 
-    <div class="searchrestaurant">  
-            
-            <table>
-                { % for restaurant in restaurants %}
-                    <tr>
-                        <td>{{ restaurant.name }}</td>
-                    </tr>
-                { % endfor % }}
-            </table>
+    <div class="searchrestaurant">
+        <table>
+        {% for restaurant in restaurants %}
+            <tr>
+                <td>{{ restaurant.name }}
+                    {{ restaurant.address }}
+                    {{ restaurant.phone_no }}</td>
 
-            <button id="reservebtn" class="reservebtn">Reserve</button>
-            <button id="orderbtn" class="orderbtn">Order</button>
-            
-            <!--Reserve-->
-            <div id="reserve_restaurant1box" class="reserve_restaurant1box">
-                <div id ="reserve_restaurant1content" class="reserve_restaurant1content">
-                    <h2 align="center">Reserve</h2>
-                    <form action="" align="center" method="post">
-                        {% csrf_token %}
-                        {{ form }}
-                        <p align="center"><input type="submit" value="Reserve" /></p>
-                    </form>
-                    <button align="center" id="reserve_close1">Close</button>
-                </div>
-            </div>
+                <td><form align="center" action="reserve/" method="post">
+                    {% csrf_token %}
+                    <input class="reservebtn" type="submit" value="Reserve"/>
+                    </form></td>
+            </tr>
+        {% endfor %}
+        </table>
     </div>
 </body>
 </html>

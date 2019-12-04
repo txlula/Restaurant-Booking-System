@@ -11,6 +11,15 @@ body {
     margin: auto;
 }
 
+.reserveblock {
+    border-style: outset;
+    border-width: 5px;
+    background-color: lightgray;
+    width: 500px;
+    margin: auto;
+    display: block;
+}
+
 .startbutton {
     font-size: 15px;
     text-decoration: none;
@@ -25,15 +34,6 @@ body {
     background-color: white;
     color: black;
     border: 1px solid black;
-}
-
-.stafflogin {
-    border-style: outset;
-    border-width: 5px;
-    background-color: lightgray;
-    width: 500px;
-    margin: auto;
-    display: block;
 }
 
 .form {

@@ -30,5 +30,5 @@ urlpatterns = [
     re_path(r'stafflogin/$', views.staffloginscreen, name='stafflogin'),
     re_path(r'staffregister/$', views.staffregister, name='staffregister'),
     re_path(r'staffhome/$', views.staffhome, name='staffhome'),
-    re_path(r'content/$', views.content, name='content'),
+    re_path(r'reserve/$', views.reserve, name='reserve'),
 ]

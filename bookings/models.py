@@ -10,6 +10,9 @@ class Restaurant(models.Model):
     phone_no = models.PositiveIntegerField()
     max_size = models.PositiveIntegerField()
 
+    def __str__(self):
+        return "{}, {}, {}", self.name, self.address, self.phone_no
+
 #Person Model
 class Person(models.Model):
     personID = models.AutoField(primary_key=True)
@@ -25,6 +28,9 @@ class Account(models.Model):
     password = models.CharField(max_length=20)
     Person = models.ForeignKey(Person, on_delete=models.CASCADE)
     Restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.username
 
 #Reservation Model
 class Reservation(models.Model):

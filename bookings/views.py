@@ -3,24 +3,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from bookings.models import *
 import datetime
 
+'''
 import sqlite3
 conn = sqlite3.connect('db.sqlite3')
-
-def content(request):
-    return render(request, 'bookings/content.html',)
+'''
 
 #Start Page
 def start(request):
     restaurants = Restaurant.objects.all()
-    content = {'restaurants' : restaurants}
-    if request.method == "post":
-        form = ReserveForm(request.POST)
-        if form.is_valid():
-            reservation = form.save()
-            reservation.save()
-        else:
-            form = ReserveForm()
-    return render(request, 'bookings/start.html', content)
+    context = {'restaurants' : restaurants}
+    return render(request, 'bookings/start.html', context)
 
 #Staff Login Page
 def staffloginscreen(request):
@@ -53,3 +45,13 @@ def staffregister(request):
 #Staff Home
 def staffhome(request):
     return render(request, 'bookings/staffhome.html',)
+
+#Reserve Page
+def reserve(request):
+    form = ReserveForm()
+    if request.method == "post":
+        if form.is_valid():
+            form.save()
+        else:
+            form = ReserveForm()
+    return render(request, 'bookings/reserve.html', {'form' : form})
