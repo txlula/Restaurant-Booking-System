@@ -13,9 +13,10 @@
     </div>
 
     <div class="reserveblock">
-        <form align="center" method="post">
+        <form align="center" method="POST" action="">
             {% csrf_token %}
             {{ form.as_p }}
+            <input class="reservebutton" type="submit" value="Reserve"/>
         </form>
     </div>
 </body>

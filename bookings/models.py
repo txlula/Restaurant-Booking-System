@@ -21,6 +21,9 @@ class Person(models.Model):
     phone_no = models.PositiveIntegerField()
     email = models.EmailField(max_length=300)
 
+    def __str__(self):
+        return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
+
 #Account Model
 class Account(models.Model):
     accountID = models.AutoField(primary_key=True)
@@ -38,7 +41,9 @@ class Reservation(models.Model):
     no_of_people = models.PositiveIntegerField()
     date_of_booking = models.DateField()
     time_of_booking = models.TimeField(unique=True)
-    Person = models.ForeignKey(Person, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking
 
 #Dish Model
 class Dish(models.Model):
@@ -53,11 +58,18 @@ class Order(models.Model):
     address = models.TextField()
     Dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "{}, {}", self.time, self.address
+
 #Form to reserve with Reservation Model
 class ReserveForm(ModelForm):
     class Meta:
         model = Reservation
         fields = ['no_of_people', 'date_of_booking', 'time_of_booking']
+        widgets = { 'no_of_people' : forms.NumberInput(attrs={'placeholder' : 'Number of people dining'}), 
+                   'date_of_booking' : forms.DateInput(attrs={'placeholder' : 'Date of booking'}), 
+                   'time_of_booking' : forms.DateTimeInput(attrs={'placeholder' : 'Time of booking'}) 
+                   }
 
 #Form for customer's input when reserving
 class CustomerForm(ModelForm):
@@ -71,6 +83,9 @@ class RegisterStaffAccountForm(ModelForm):
     class Meta:
         model = Account
         fields = ['username', 'password']
+        widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
+                   'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
+                   }
 
 #Form to register staff with Person Model
 class RegisterStaffForm(ModelForm):
@@ -78,6 +93,11 @@ class RegisterStaffForm(ModelForm):
     class Meta:
         model = Person
         fields = ['first_name', 'second_name', 'phone_no', 'email']
+        widgets = { 'first_name' : forms.TextInput(attrs={'placeholder' : 'First Name'}),
+                   'second_name' : forms.TextInput(attrs={'placeholder' : 'Second Name'}),
+                   'phone_no' : forms.NumberInput(attrs={'placeholder' : 'Phone Number'}),
+                   'email' : forms.EmailInput(attrs={'placeholder' : 'Email'})
+                   }
 
 #Form to login staff
 class LoginStaffAccountForm(ModelForm):
@@ -85,5 +105,6 @@ class LoginStaffAccountForm(ModelForm):
     class Meta:
         model = Account
         fields = ['username', 'password']
-
-
+        widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
+                   'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
+                   }
