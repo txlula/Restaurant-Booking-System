@@ -55,6 +55,7 @@
     <Content Include="bookings\templates\bookings\stafflogin.html" />
     <Content Include="bookings\templates\bookings\staffregister.html" />
     <Content Include="bookings\templates\bookings\start.html" />
+    <Content Include="Documentation\Lucy Nguyen - 2019 Project log 7517-C.docx" />
     <Content Include="Documentation\Restaurant Booking System NEA.docx" />
     <Content Include="requirements.txt" />
   </ItemGroup>
