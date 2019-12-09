@@ -55,6 +55,7 @@
     <Content Include="bookings\templates\bookings\stafflogin.html" />
     <Content Include="bookings\templates\bookings\staffregister.html" />
     <Content Include="bookings\templates\bookings\start.html" />
+    <Content Include="Documentation\Restaurant Booking System NEA.docx" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +64,7 @@
     <Folder Include="bookings\static\" />
     <Folder Include="bookings\templates\" />
     <Folder Include="bookings\templates\bookings\" />
+    <Folder Include="Documentation\" />
     <Folder Include="Restaurant_Booking_System\" />
   </ItemGroup>
   <ItemGroup>
