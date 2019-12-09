@@ -16,8 +16,18 @@ def staffloginscreen(request):
 
 #Staff Register Page
 def staffregister(request):
-    registerform = RegisterStaffAccountForm(request.POST)
-    return render(request, 'bookings/staffregister.html', {'form' : registerform})
+    registerstaffaccountform = RegisterStaffAccountForm(request.POST)
+    registerstaffForm = RegisterStaffForm(request.POST)
+    #Validation
+    if registerstaffForm.is_valid() and registerstaffaccountform.is_valid() :
+        Account = registerstaffaccountform.save()
+        Person = registerstaffForm.save()
+    else:
+        registerstaffaccountform = RegisterStaffAccountForm()
+        registerstaffForm = RegisterStaffForm()
+
+    return render(request, 'bookings/staffregister.html', {'registerstaffaccountform' : registerstaffaccountform,
+                                                          'registerstaffForm' : registerstaffForm})
 
 #Staff Home
 def staffhome(request):
@@ -26,6 +36,10 @@ def staffhome(request):
 #Reserve Page
 def reserve(request):
     reserveform = ReserveForm(request.POST)
+    #Validation
     if reserveform.is_valid():
         Reservation = reserveform.save()
+    else:
+        reserveform = ReserveForm()
+
     return render(request, 'bookings/reserve.html', {'form' : reserveform})

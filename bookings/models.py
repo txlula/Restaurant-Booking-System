@@ -10,6 +10,7 @@ class Restaurant(models.Model):
     phone_no = models.PositiveIntegerField()
     max_size = models.PositiveIntegerField()
 
+    #Display information in string format
     def __str__(self):
         return "{}, {}, {}", self.name, self.address, self.phone_no
 
@@ -21,6 +22,7 @@ class Person(models.Model):
     phone_no = models.PositiveIntegerField()
     email = models.EmailField(max_length=300)
 
+    #Display information in string format
     def __str__(self):
         return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
 
@@ -42,6 +44,7 @@ class Reservation(models.Model):
     date_of_booking = models.DateField()
     time_of_booking = models.TimeField(unique=True)
 
+    #Display information in string format
     def __str__(self):
         return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking
 
@@ -58,6 +61,7 @@ class Order(models.Model):
     address = models.TextField()
     Dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
 
+    #Display information in string format
     def __str__(self):
         return "{}, {}", self.time, self.address
 
