@@ -4,7 +4,7 @@ from django import forms
 
 #Restaurant Model
 class Restaurant(models.Model):
-    restaurantID = models.AutoField(primary_key=True)
+    restaurantID = models.AutoField(primary_key=True, unique=True)
     name = models.CharField(max_length=300)
     address = models.TextField()
     phone_no = models.PositiveIntegerField()
@@ -16,7 +16,7 @@ class Restaurant(models.Model):
 
 #Person Model
 class Person(models.Model):
-    personID = models.AutoField(primary_key=True)
+    personID = models.AutoField(primary_key=True, unique=True)
     first_name = models.CharField(max_length=50)
     second_name = models.CharField(max_length=50)
     phone_no = models.PositiveIntegerField()
@@ -28,18 +28,16 @@ class Person(models.Model):
 
 #Account Model
 class Account(models.Model):
-    accountID = models.AutoField(primary_key=True)
+    accountID = models.AutoField(primary_key=True, unique=True)
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
-    Person = models.ForeignKey(Person, on_delete=models.CASCADE)
-    Restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.username
 
 #Reservation Model
 class Reservation(models.Model):
-    reservationID = models.AutoField(primary_key=True)
+    reservationID = models.AutoField(primary_key=True, unique=True)
     no_of_people = models.PositiveIntegerField()
     date_of_booking = models.DateField()
     time_of_booking = models.TimeField(unique=True)
@@ -50,16 +48,16 @@ class Reservation(models.Model):
 
 #Dish Model
 class Dish(models.Model):
-	dishID = models.AutoField(primary_key=True)
+	dishID = models.AutoField(primary_key=True, unique=True)
 	name = models.CharField(max_length=200)
 	price = models.DecimalField(max_digits=5, decimal_places=2)
 
 #Order Model
 class Order(models.Model):
-    orderID = models.AutoField(primary_key=True)
+    orderID = models.AutoField(primary_key=True, unique=True)
     time = models.DateTimeField()
     address = models.TextField()
-    Dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
 
     #Display information in string format
     def __str__(self):
@@ -71,7 +69,7 @@ class ReserveForm(ModelForm):
         model = Reservation
         fields = ['no_of_people', 'date_of_booking', 'time_of_booking']
         widgets = { 'no_of_people' : forms.NumberInput(attrs={'placeholder' : 'Number of people dining'}), 
-                   'date_of_booking' : forms.DateInput(attrs={'placeholder' : 'Date of booking'}), 
+                   'date_of_booking' : forms.SelectDateWidget(attrs={'placeholder' : 'Date of booking'}), 
                    'time_of_booking' : forms.DateTimeInput(attrs={'placeholder' : 'Time of booking'}) 
                    }
 

@@ -12,6 +12,12 @@ def start(request):
 #Staff Login Page
 def staffloginscreen(request):
     loginform = LoginStaffAccountForm(request.POST)
+    #Validation
+    if loginform.is_valid():
+        formdata = request.POST.copy()
+        accounts = Account.objects.all()
+    else:
+        loginform = LoginStaffAccountForm()
     return render(request, 'bookings/stafflogin.html', {'form' : loginform})
 
 #Staff Register Page
@@ -19,7 +25,7 @@ def staffregister(request):
     registerstaffaccountform = RegisterStaffAccountForm(request.POST)
     registerstaffForm = RegisterStaffForm(request.POST)
     #Validation
-    if registerstaffForm.is_valid() and registerstaffaccountform.is_valid() :
+    if registerstaffForm.is_valid() and registerstaffaccountform.is_valid():
         Account = registerstaffaccountform.save()
         Person = registerstaffForm.save()
     else:
