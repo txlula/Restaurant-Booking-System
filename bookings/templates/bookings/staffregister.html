@@ -17,8 +17,8 @@
         <p align="center"><strong>Fill out this form to create an account.</strong></p>
         <form align="center" method="post">
             {% csrf_token %}
-            {{ registerstaffaccountform.as_p }}
-            {{ registerstaffForm.as_p }}
+            {{ form.as_p }}
+            {{ registerpersonform.as_p }}
             <input class="staffregisterbutton" type="submit" value="Register"/>
         </form>
     </div>

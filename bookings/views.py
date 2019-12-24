@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from bookings.models import *
 import datetime
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 #Start Page
 def start(request):
@@ -11,29 +13,36 @@ def start(request):
 
 #Staff Login Page
 def staffloginscreen(request):
-    loginform = LoginStaffAccountForm(request.POST)
-    #Validation
-    if loginform.is_valid():
-        formdata = request.POST.copy()
-        accounts = Account.objects.all()
+    form = AuthenticationForm()
+
+    if request.method == 'post':
+        form = AuthenticationForm(data=request.POST)
+
+        #Validation
+        if form.is_valid():
+            user = form.get_user()
     else:
-        loginform = LoginStaffAccountForm()
-    return render(request, 'bookings/stafflogin.html', {'form' : loginform})
+        form = AuthenticationForm()
+    return render(request, 'bookings/stafflogin.html', {'form' : form})
 
 #Staff Register Page
 def staffregister(request):
-    registerstaffaccountform = RegisterStaffAccountForm(request.POST)
-    registerstaffForm = RegisterStaffForm(request.POST)
-    #Validation
-    if registerstaffForm.is_valid() and registerstaffaccountform.is_valid():
-        Account = registerstaffaccountform.save()
-        Person = registerstaffForm.save()
-    else:
-        registerstaffaccountform = RegisterStaffAccountForm()
-        registerstaffForm = RegisterStaffForm()
+    form = UserCreationForm()
+    registerpersonform = RegisterStaffForm()
 
-    return render(request, 'bookings/staffregister.html', {'registerstaffaccountform' : registerstaffaccountform,
-                                                          'registerstaffForm' : registerstaffForm})
+    if request.method == 'post':
+        form = UserCreationForm(request.POST)
+        registerpersonform = RegisterStaffForm(request.POST)
+
+        #Validation
+        if form.is_valid() and registerpersonform.is_valid():
+            user = form.save()
+            Person = registerpersonform.save()
+    else:
+        form = UserCreationForm()
+        registerpersonform = RegisterStaffForm()
+    return render(request, 'bookings/staffregister.html', {'form' : form,
+                                                          'registerpersonform' : registerpersonform})
 
 #Staff Home
 def staffhome(request):
