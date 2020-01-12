@@ -47,7 +47,21 @@ def staffregister(request):
 
 #Staff Home
 def staffhome(request):
-    return render(request, 'bookings/staffhome.html',)
+    reservations = Reservation.objects.all()
+    context = {'reservations' : reservations}
+
+    class NotificationsQueue:
+        def __init__(self):
+            self.queue = list()
+            self.front = 0
+            self.rear = 0
+            self.maxSize = 6
+        
+        def enqueue(self, item):
+            if self.size() == self.maxSize - 1:
+                return False
+
+    return render(request, 'bookings/staffhome.html', context)
 
 #Reserve Page
 def reserve(request):

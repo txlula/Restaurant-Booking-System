@@ -31,24 +31,29 @@
     </div>
 
     <!--Searching up for a restaurant box-->
-
     <div class="searchrestaurant">
         <input align="center" type="text" placeholder="Search for a restaurant"/>
 
         <p></p>
 
         <table>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th></th>
+        </tr>
         {% for restaurant in restaurants %}
-            <tr>
-                <td>{{ restaurant.name }}
-                    {{ restaurant.address }}
-                    {{ restaurant.phone_no }}</td>
+        <tr>
+            <td>{{ restaurant.name }}</td>
+            <td>{{ restaurant.address }}</td>
+            <td>{{ restaurant.phone_no }}</td>
 
-                <td><form align="center" action="reserve/" method="post">
-                    {% csrf_token %}
-                    <input class="reservebtn" type="submit" value="Reserve"/>
-                    </form></td>
-            </tr>
+            <td><form align="center" action="reserve/" method="post">
+                {% csrf_token %}
+                <input class="reservebtn" type="submit" value="Reserve"/>
+                </form></td>
+        </tr>
         {% endfor %}
         </table>
     </div>
