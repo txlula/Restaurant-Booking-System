@@ -32,7 +32,11 @@
 
     <!--Searching up for a restaurant box-->
     <div class="searchrestaurant">
+        <form align="center" action="/" method="post">
+        {% csrf_token %}
         <input align="center" type="text" placeholder="Search for a restaurant"/>
+        <input type="submit" value="Search"/>
+        </form>
 
         <p></p>
 

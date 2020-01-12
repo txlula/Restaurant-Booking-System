@@ -1,15 +1,25 @@
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+
+#Import all models
 from bookings.models import *
-import datetime
+
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import messages
 
 #Start Page
 def start(request):
-    restaurants = Restaurant.objects.all()
-    context = {'restaurants' : restaurants}
+
+    if request.method == 'post':
+        
+        restaurants = Restaurant.objects.raw('SELECT name FROM Restaurant')
+        context = {'restaurants' : restaurants}
+    else:
+        restaurants = Restaurant.objects.all()
+        context = {'restaurants' : restaurants}
+
     return render(request, 'bookings/start.html', context)
 
 #Staff Login Page
@@ -50,6 +60,7 @@ def staffhome(request):
     reservations = Reservation.objects.all()
     context = {'reservations' : reservations}
 
+    #Implementing notifications using a circular queue
     class NotificationsQueue:
         def __init__(self):
             self.queue = list()
@@ -57,10 +68,6 @@ def staffhome(request):
             self.rear = 0
             self.maxSize = 6
         
-        def enqueue(self, item):
-            if self.size() == self.maxSize - 1:
-                return False
-
     return render(request, 'bookings/staffhome.html', context)
 
 #Reserve Page
