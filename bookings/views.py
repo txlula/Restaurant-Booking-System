@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -11,9 +10,7 @@ from django.contrib import messages
 
 #Start Page
 def start(request):
-
     if request.method == 'post':
-        
         restaurants = Restaurant.objects.raw('SELECT name FROM Restaurant')
         context = {'restaurants' : restaurants}
     else:

@@ -15,8 +15,7 @@
 
         <!--Staff Login-->
         <p align="center"><font size="4">Staff login</font></p>
-        <form align="center" action="stafflogin/" method="post">
-            {% csrf_token %}
+        <form align="center" action="stafflogin/">
             <input class="redirectstafflogin" type="submit" value="Staff Log in"/>
         </form>
 
@@ -24,8 +23,7 @@
 
         <!--Staff register-->
         <p align="center"><font size="4">Staff register</font></p>
-        <form align="center" action="staffregister/" method="post">
-            {% csrf_token %}
+        <form align="center" action="staffregister/">
             <input class="redirectstaffregister" type="submit" value="Staff Register"/>
         </form>
     </div>
@@ -37,8 +35,6 @@
         <input align="center" type="text" placeholder="Search for a restaurant"/>
         <input type="submit" value="Search"/>
         </form>
-
-        <p></p>
 
         <table>
         <tr>
