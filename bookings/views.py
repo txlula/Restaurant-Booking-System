@@ -4,6 +4,7 @@ from bookings.models import *
 import datetime
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib import messages
 
 #Start Page
 def start(request):
@@ -54,7 +55,9 @@ def reserve(request):
     #Validation
     if reserveform.is_valid():
         Reservation = reserveform.save()
+        messages.success(request, 'You have reserved a table.')
     else:
+        messages.error(request, 'Choose a different time.')
         reserveform = ReserveForm()
 
     return render(request, 'bookings/reserve.html', {'form' : reserveform})
