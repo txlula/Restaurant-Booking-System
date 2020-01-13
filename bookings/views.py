@@ -10,14 +10,16 @@ from django.contrib import messages
 
 #Start Page
 def start(request):
+    form = SearchRestaurant()
     if request.method == 'post':
-        restaurants = Restaurant.objects.raw('SELECT name FROM Restaurant')
-        context = {'restaurants' : restaurants}
+        form = SearchRestaurant(data=request.POST)
     else:
+        #A query is made to filter restaurants by name
+        form = SearchRestaurant()
         restaurants = Restaurant.objects.all()
         context = {'restaurants' : restaurants}
 
-    return render(request, 'bookings/start.html', context)
+    return render(request, 'bookings/start.html', context, {'form' : form})
 
 #Staff Login Page
 def staffloginscreen(request):

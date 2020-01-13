@@ -136,3 +136,7 @@ class LoginStaffAccountForm(ModelForm):
         widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
                    'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
                    }
+
+#Form for searching restaurant
+class SearchRestaurant(forms.Form):
+    name = forms.CharField(widgets = forms.TextInput(attrs={'placeholder' : 'Search for restaurant name'}))
