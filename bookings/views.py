@@ -10,16 +10,18 @@ from django.contrib import messages
 
 #Start Page
 def start(request):
-    form = SearchRestaurant()
-    if request.method == 'post':
-        form = SearchRestaurant(data=request.POST)
-    else:
-        #A query is made to filter restaurants by name
-        form = SearchRestaurant()
-        restaurants = Restaurant.objects.all()
-        context = {'restaurants' : restaurants}
+    '''
+    restaurants = Restaurant.objects.all()
+    context = {'restaurants' : restaurants}
+    '''
+    restaurants = Restaurant.objects.raw('SELECT * FROM Restaurant')
+    context = {'restaurants' : restaurants}
 
-    return render(request, 'bookings/start.html', context, {'form' : form})
+    if request.method == 'post':
+        form = SearchRestaurant(request.POST)
+    else:
+        form = SearchRestaurant()
+    return render(request, 'bookings/start.html', context)
 
 #Staff Login Page
 def staffloginscreen(request):
@@ -77,7 +79,7 @@ def reserve(request):
         Reservation = reserveform.save()
         messages.success(request, 'You have reserved a table.')
     else:
-        messages.error(request, 'Choose a different time.')
+        #messages.error(request, 'Choose a different time.')
         reserveform = ReserveForm()
 
     return render(request, 'bookings/reserve.html', {'form' : reserveform})
