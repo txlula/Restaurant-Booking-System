@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic.list import ListView
 
 #Import all models
 from bookings.models import *
@@ -10,18 +11,29 @@ from django.contrib import messages
 
 #Start Page
 def start(request):
-    '''
     restaurants = Restaurant.objects.all()
     context = {'restaurants' : restaurants}
-    '''
-    restaurants = Restaurant.objects.raw('SELECT * FROM Restaurant')
-    context = {'restaurants' : restaurants}
-
-    if request.method == 'post':
-        form = SearchRestaurant(request.POST)
-    else:
-        form = SearchRestaurant()
+    if request.method == 'get':
+        query = request.GET.get('name')
+        if query:
+            restaurants = Restaurant.objects.filter(name__icontains=query)
+            context = {'restaurants' : restaurants}
+        else:
+            restaurants = Restaurant.objects.all()
+            context = {'restaurants' : restaurants}
     return render(request, 'bookings/start.html', context)
+
+'''
+class SearchRestaurantView(ListView):
+    model = Restaurant
+
+    def get_queryset(self):
+        query = self.request.GET.get('name')
+        if query:
+            return Restaurant.objects.filter(name__icontains=query)
+        else:
+            return Restaurant.objects.all()
+'''
 
 #Staff Login Page
 def staffloginscreen(request):
@@ -58,16 +70,31 @@ def staffregister(request):
 
 #Staff Home
 def staffhome(request):
-    reservations = Reservation.objects.all()
-    context = {'reservations' : reservations}
-
     #Implementing notifications using a circular queue
-    class NotificationsQueue:
+    class Notifications:
         def __init__(self):
             self.queue = list()
             self.front = 0
             self.rear = 0
             self.maxSize = 6
+            QueueFull = False
+
+        def enqueue(self, item):
+            if self.size() == self.maxSize - 1:
+                QueueFull = True
+            self.queue.append(item)
+            self.rear = (self.rear + 1) % self.maxSize
+            return True
+
+        def dequeue(self):
+            if self.size() == 0:
+                QueueEmpty = True
+            item = self.queue[self.front]
+            self.front = (self.front + 1) % self.maxSize
+            return item
+
+    reservations = Reservation.objects.all()
+    context = {'reservations' : reservations}
         
     return render(request, 'bookings/staffhome.html', context)
 

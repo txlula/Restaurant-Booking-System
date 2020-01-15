@@ -1,7 +1,7 @@
 from bookings import views
 from django.contrib import admin
 from django.conf.urls import url
-from django.urls import path, re_path, include
+from django.urls import path, re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),

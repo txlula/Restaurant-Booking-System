@@ -30,11 +30,9 @@
 
     <!--Searching up for a restaurant box-->
     <div class="searchrestaurant">
-        <form align="center" action="/" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input align="center" type="text" placeholder="Search for a restaurant"/>
-            <input type="submit" value="Search"/>
+        <form align="center" method="get" action="">
+            <input type="text" name="name" placeholder="Search for restaurant by name" />
+            <button type="submit">Search</button>
         </form>
 
         <table>
