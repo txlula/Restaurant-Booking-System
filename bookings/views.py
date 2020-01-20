@@ -16,24 +16,12 @@ def start(request):
     if request.method == 'get':
         query = request.GET.get('name')
         if query:
-            restaurants = Restaurant.objects.filter(name__icontains=query)
+            restaurants = Restaurant.objects.filter(name="query")
             context = {'restaurants' : restaurants}
         else:
             restaurants = Restaurant.objects.all()
             context = {'restaurants' : restaurants}
     return render(request, 'bookings/start.html', context)
-
-'''
-class SearchRestaurantView(ListView):
-    model = Restaurant
-
-    def get_queryset(self):
-        query = self.request.GET.get('name')
-        if query:
-            return Restaurant.objects.filter(name__icontains=query)
-        else:
-            return Restaurant.objects.all()
-'''
 
 #Staff Login Page
 def staffloginscreen(request):
@@ -72,6 +60,7 @@ def staffregister(request):
 def staffhome(request):
     #Implementing notifications using a circular queue
     class Notifications:
+        #Implement queue
         def __init__(self):
             self.queue = list()
             self.front = 0
@@ -79,6 +68,7 @@ def staffhome(request):
             self.maxSize = 6
             QueueFull = False
 
+        #Adding items to queue
         def enqueue(self, item):
             if self.size() == self.maxSize - 1:
                 QueueFull = True
@@ -86,6 +76,7 @@ def staffhome(request):
             self.rear = (self.rear + 1) % self.maxSize
             return True
 
+        #Removing items from queue
         def dequeue(self):
             if self.size() == 0:
                 QueueEmpty = True
