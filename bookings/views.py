@@ -11,7 +11,7 @@ from django.contrib import messages
 
 #Start Page
 def start(request):
-    restaurants = Restaurant.objects.all()
+    restaurants = Restaurant.objects.raw('SELECT * FROM bookings_Restaurant')
     context = {'restaurants' : restaurants}
     if request.method == 'get':
         query = request.GET.get('name')
@@ -19,7 +19,7 @@ def start(request):
             restaurants = Restaurant.objects.filter(name="query")
             context = {'restaurants' : restaurants}
         else:
-            restaurants = Restaurant.objects.all()
+            restaurants = Restaurant.objects.raw('SELECT * FROM bookings_Restaurant')
             context = {'restaurants' : restaurants}
     return render(request, 'bookings/start.html', context)
 
@@ -66,25 +66,32 @@ def staffhome(request):
             self.front = 0
             self.rear = 0
             self.maxSize = 6
+            self.size = len(self.queue)
             QueueFull = False
 
         #Adding items to queue
         def enqueue(self, item):
-            if self.size() == self.maxSize - 1:
+            if self.size == self.maxSize - 1:
                 QueueFull = True
             self.queue.append(item)
             self.rear = (self.rear + 1) % self.maxSize
-            return True
 
         #Removing items from queue
         def dequeue(self):
-            if self.size() == 0:
+            if self.size == 0:
                 QueueEmpty = True
             item = self.queue[self.front]
             self.front = (self.front + 1) % self.maxSize
             return item
 
-    reservations = Reservation.objects.all()
+    allreservations = Reservation.objects.all()
+    
+    NotificationQueue = Notifications()
+
+    for reservation in allreservations:
+        NotificationQueue.enqueue(reservation)
+
+    reservations = NotificationQueue
     context = {'reservations' : reservations}
         
     return render(request, 'bookings/staffhome.html', context)
