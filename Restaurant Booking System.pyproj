@@ -45,11 +45,13 @@
     <Compile Include="Restaurant_Booking_System\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bookings\static\menustyle.css" />
     <Content Include="bookings\static\reservestyle.css" />
     <Content Include="bookings\static\staffhomestyle.css" />
     <Content Include="bookings\static\staffloginstyle.css" />
     <Content Include="bookings\static\staffregisterstyle.css" />
     <Content Include="bookings\static\startstyle.css" />
+    <Content Include="bookings\templates\bookings\menu.html" />
     <Content Include="bookings\templates\bookings\reserve.html" />
     <Content Include="bookings\templates\bookings\staffhome.html" />
     <Content Include="bookings\templates\bookings\stafflogin.html" />

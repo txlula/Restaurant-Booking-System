@@ -84,14 +84,7 @@ def staffhome(request):
             self.front = (self.front + 1) % self.maxSize
             return item
 
-    allreservations = Reservation.objects.all()
-    
-    NotificationQueue = Notifications()
-
-    for reservation in allreservations:
-        NotificationQueue.enqueue(reservation)
-
-    reservations = NotificationQueue
+    reservations = Reservation.objects.all()
     context = {'reservations' : reservations}
         
     return render(request, 'bookings/staffhome.html', context)
@@ -108,3 +101,6 @@ def reserve(request):
         reserveform = ReserveForm()
 
     return render(request, 'bookings/reserve.html', {'form' : reserveform})
+
+def menu(request):
+    return render(request, 'bookings/menu.html',)
