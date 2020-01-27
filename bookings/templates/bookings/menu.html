@@ -11,5 +11,12 @@
             <input class="startbutton" type="submit" value="Home Page"/>
         </form>
     </div>
+
+    <div class="AddDish">
+        <form align="center" method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </form>
+    </div>
 </body>
 </html>

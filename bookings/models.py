@@ -74,6 +74,7 @@ class Dish(models.Model):
     #Dish price
 	price = models.DecimalField(max_digits=5, decimal_places=2)
 
+
 #Order Model
 class Order(models.Model):
     #Unique ID for Order
@@ -135,4 +136,13 @@ class LoginStaffAccountForm(ModelForm):
         fields = ['username', 'password']
         widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
                    'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
+                   }
+
+#Form to add dish
+class AddDishForm(ModelForm):
+    class Meta:
+        model = Dish
+        fields = ['name', 'price']
+        widgets = { 'name' : forms.TextInput(attrs={'placeholder' : 'Dish name'}),
+                   'price' : forms.NumberInput(attrs={'placeholder' : 'Price'})
                    }

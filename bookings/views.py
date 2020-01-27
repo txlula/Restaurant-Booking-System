@@ -102,5 +102,12 @@ def reserve(request):
 
     return render(request, 'bookings/reserve.html', {'form' : reserveform})
 
+#Menu Page
 def menu(request):
-    return render(request, 'bookings/menu.html',)
+    AddDish = AddDishForm(request.POST)
+    #Validation
+    if AddDish.is_valid():
+        Dish = AddDish.save()
+    else:
+        AddDish = AddDishForm()
+    return render(request, 'bookings/menu.html', {'form' : AddDish})
