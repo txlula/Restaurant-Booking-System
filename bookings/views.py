@@ -6,6 +6,7 @@ from django.views.generic.list import ListView
 from bookings.models import *
 
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import messages
 
@@ -104,10 +105,13 @@ def reserve(request):
 
 #Menu Page
 def menu(request):
+    dishes = Dish.objects.raw('SELECT * FROM bookings_Dish')
+    context = {'dishes' : dishes}
+
     AddDish = AddDishForm(request.POST)
     #Validation
     if AddDish.is_valid():
         Dish = AddDish.save()
     else:
         AddDish = AddDishForm()
-    return render(request, 'bookings/menu.html', {'form' : AddDish})
+    return render(request, 'bookings/menu.html', context, {'form' : AddDish})

@@ -18,5 +18,30 @@
             {{ form.as_p }}
         </form>
     </div>
+
+    <div class="Dishes">
+        <form align="center" method="get" action="menu/">
+            <input type="text" name="name" placeholder="Search for dish by name" />
+            <button type="submit">Search</button>
+        </form>
+
+        <table>
+        <tr>
+            <th>Dish Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+        {% for dish in dishes %}
+        <tr>
+            <td>{{ dish.name }}</td>
+            <td>{{ dish.price }}</td>
+
+            <td><form align="center" action="menu/" method="get">
+                <input class="removebtn" type="submit" value="Remove"/>
+                </form></td>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
 </body>
 </html>
