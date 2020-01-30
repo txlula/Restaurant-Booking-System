@@ -3,6 +3,10 @@ from django.db import models
 from django.forms import ModelForm
 from django import forms
 
+#User Authentication System
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
 #Restaurant Model
 class Restaurant(models.Model):
     #Unique ID for Restaurant, 'AutoField' automatically assigns ID
@@ -12,7 +16,7 @@ class Restaurant(models.Model):
     #Restaurant's address
     address = models.TextField()
     #Restaurant's phone number, integer must be positive
-    phone_no = models.PositiveIntegerField()
+    #phone_no = models.PositiveIntegerField()
     #Restaurant's maximum size, integer must be positive
     max_size = models.PositiveIntegerField()
 
@@ -116,20 +120,19 @@ class RegisterStaffAccountForm(ModelForm):
                    'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
                    }
 
-#Form to register staff with Person Model
-class RegisterStaffForm(ModelForm):
+#Form to register staff with Python User Authentication System
+class RegisterStaffForm(UserCreationForm):
     email = forms.EmailField(max_length=300, widget=forms.EmailInput)
+    first_name = forms.CharField(max_length=50)
+    second_name = forms.CharField(max_length=50)
+
     class Meta:
-        model = Person
-        fields = ['first_name', 'second_name', 'phone_no', 'email']
-        widgets = { 'first_name' : forms.TextInput(attrs={'placeholder' : 'First Name'}),
-                   'second_name' : forms.TextInput(attrs={'placeholder' : 'Second Name'}),
-                   'phone_no' : forms.NumberInput(attrs={'placeholder' : 'Phone Number'}),
-                   'email' : forms.EmailInput(attrs={'placeholder' : 'Email'})
-                   }
+        model = User
+        fields = ['first_name', 'second_name', 'email']
 
 #Form to login staff
 class LoginStaffAccountForm(ModelForm):
+    username = forms.CharField(max_length=20)
     password = forms.CharField(max_length=20, widget=forms.PasswordInput)
     class Meta:
         model = Account

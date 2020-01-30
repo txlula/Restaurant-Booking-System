@@ -5,7 +5,7 @@ from django.views.generic.list import ListView
 #Import all models
 from bookings.models import *
 
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import messages
@@ -26,36 +26,36 @@ def start(request):
 
 #Staff Login Page
 def staffloginscreen(request):
-    form = AuthenticationForm()
-
     if request.method == 'post':
         form = AuthenticationForm(data=request.POST)
 
         #Validation
         if form.is_valid():
-            user = form.get_user()
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('staffhome')
     else:
         form = AuthenticationForm()
     return render(request, 'bookings/stafflogin.html', {'form' : form})
 
 #Staff Register Page
 def staffregister(request):
-    form = UserCreationForm()
-    registerpersonform = RegisterStaffForm()
-
     if request.method == 'post':
-        form = UserCreationForm(request.POST)
-        registerpersonform = RegisterStaffForm(request.POST)
+        form = RegisterStaffForm(request.POST)
 
         #Validation
-        if form.is_valid() and registerpersonform.is_valid():
-            user = form.save()
-            Person = registerpersonform.save()
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            messages.success(request, 'Account has been created.')
+            return redirect('staffhome')
     else:
-        form = UserCreationForm()
-        registerpersonform = RegisterStaffForm()
-    return render(request, 'bookings/staffregister.html', {'form' : form,
-                                                          'registerpersonform' : registerpersonform})
+        form = RegisterStaffForm()
+    return render(request, 'bookings/staffregister.html', {'form' : form})
 
 #Staff Home
 def staffhome(request):
@@ -98,7 +98,7 @@ def reserve(request):
         Reservation = reserveform.save()
         messages.success(request, 'You have reserved a table.')
     else:
-        #messages.error(request, 'Choose a different time.')
+        messages.error(request, 'Choose a different time.')
         reserveform = ReserveForm()
 
     return render(request, 'bookings/reserve.html', {'form' : reserveform})
