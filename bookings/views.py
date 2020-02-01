@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.list import ListView
 
-#Import all models
 from bookings.models import *
 
 from django.contrib.auth import authenticate, login
@@ -32,9 +31,9 @@ def staffloginscreen(request):
         #Validation
         if form.is_valid():
             form.save()
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            user = authenticate(username=username, password=password)
+            username = form.cleaned_data.get('username')
+            userpassword = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=userpassword)
             login(request, user)
             return redirect('staffhome')
     else:
@@ -46,13 +45,17 @@ def staffregister(request):
     if request.method == 'post':
         form = RegisterStaffForm(request.POST)
 
-        #Validation
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            person = form.save()
+            username = person.cleaned_data.get('username')
+            userpassword = person.cleaned_data.get('password1')
+            email = person.cleaned_data.get('email')
+
+            person.save()
+            user = authenticate(username=username, password=userpassword)
+            login(request, user)
             messages.success(request, 'Account has been created.')
-            return redirect('staffhome')
+            return redirect('staffhome/')
     else:
         form = RegisterStaffForm()
     return render(request, 'bookings/staffregister.html', {'form' : form})
@@ -93,7 +96,7 @@ def staffhome(request):
 #Reserve Page
 def reserve(request):
     reserveform = ReserveForm(request.POST)
-    #Validation
+
     if reserveform.is_valid():
         Reservation = reserveform.save()
         messages.success(request, 'You have reserved a table.')
@@ -109,7 +112,7 @@ def menu(request):
     context = {'dishes' : dishes}
 
     AddDish = AddDishForm(request.POST)
-    #Validation
+
     if AddDish.is_valid():
         Dish = AddDish.save()
     else:
