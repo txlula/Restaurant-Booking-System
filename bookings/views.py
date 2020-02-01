@@ -28,12 +28,11 @@ def staffloginscreen(request):
     if request.method == 'post':
         form = AuthenticationForm(data=request.POST)
 
-        #Validation
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            userpassword = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=userpassword)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('staffhome')
     else:
@@ -46,16 +45,11 @@ def staffregister(request):
         form = RegisterStaffForm(request.POST)
 
         if form.is_valid():
-            person = form.save()
-            username = person.cleaned_data.get('username')
-            userpassword = person.cleaned_data.get('password1')
-            email = person.cleaned_data.get('email')
-
-            person.save()
-            user = authenticate(username=username, password=userpassword)
-            login(request, user)
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
             messages.success(request, 'Account has been created.')
-            return redirect('staffhome/')
+            return redirect('staffhome')
     else:
         form = RegisterStaffForm()
     return render(request, 'bookings/staffregister.html', {'form' : form})

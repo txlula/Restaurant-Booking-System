@@ -44,9 +44,9 @@
         </tr>
         {% for restaurant in restaurants %}
         <tr>
-            <td>{{ restaurant.name }}</td>
-            <td>{{ restaurant.address }}</td>
-            <td>{{ restaurant.phone_no }}</td>
+            <td>{{ restaurant.rest_name }}</td>
+            <td>{{ restaurant.rest_address }}</td>
+            <td>{{ restaurant.rest_phone_no }}</td>
 
             <td><form align="center" action="reserve/" method="post">
                 {% csrf_token %}
