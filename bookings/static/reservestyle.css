@@ -20,6 +20,15 @@ body {
     display: block;
 }
 
+.personblock {
+    border-style: outset;
+    border-width: 5px;
+    background-color: lightgray;
+    width: 500px;
+    margin: auto;
+    display: block;
+}
+
 .startbutton {
     font-size: 15px;
     text-decoration: none;

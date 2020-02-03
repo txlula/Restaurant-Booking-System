@@ -123,7 +123,6 @@ class LoginStaffAccountForm(ModelForm):
 
 #Form to add dish
 class AddDishForm(ModelForm):
-
     class Meta:
         model = Dish
         fields = ['dish_name', 'dish_price']
