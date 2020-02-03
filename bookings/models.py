@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django import forms
 
 from phone_field import PhoneField
+from datetime import datetime
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -35,6 +36,8 @@ class Account(models.Model):
     accountID = models.AutoField(primary_key=True, unique=True)
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
+    #Person model is linked to account model
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, default="")
 
     def __str__(self):
         return self.username
@@ -43,12 +46,16 @@ class Account(models.Model):
 class Reservation(models.Model):
     reservationID = models.AutoField(primary_key=True, unique=True)
     no_of_people = models.PositiveIntegerField()
-    date_of_booking = models.DateField()
-    #Time must be unique
-    time_of_booking = models.TimeField(unique=True)
+    date_of_booking = models.DateField(default=datetime.now)
+    time_of_booking = models.TimeField()
 
     def __str__(self):
         return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking
+
+    def ValidateDate(self):
+        date = self.cleaned_data['date_of_booking']
+        if date < datetime.now():
+            raise forms.ValidationError("Invalid date")
 
 #Dish Model
 class Dish(models.Model):
@@ -62,7 +69,7 @@ class Order(models.Model):
     order_time = models.DateTimeField()
     order_address = models.TextField()
     #Order model is linked to Dish model
-    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, default="")
 
     def __str__(self):
         return "{}, {}", self.order_time, self.order_address

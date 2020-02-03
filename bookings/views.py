@@ -16,7 +16,7 @@ def start(request):
     if request.method == 'get':
         query = request.GET.get('name')
         if query:
-            restaurants = Restaurant.objects.filter(name="query")
+            restaurants = Restaurant.objects.filter(name=query)
             context = {'restaurants' : restaurants}
         else:
             restaurants = Restaurant.objects.raw('SELECT * FROM bookings_Restaurant')
@@ -90,14 +90,15 @@ def staffhome(request):
 #Reserve Page
 def reserve(request):
     reserveform = ReserveForm(request.POST)
+    #customerform = CustomerForm(request.POST)
 
     if reserveform.is_valid():
         Reservation = reserveform.save()
         messages.success(request, 'You have reserved a table.')
     else:
-        messages.error(request, 'Choose a different time.')
         reserveform = ReserveForm()
-
+        #customerform = CustomerForm()
+        messages.info(request, 'Time should be in 24:00 format')
     return render(request, 'bookings/reserve.html', {'form' : reserveform})
 
 #Menu Page

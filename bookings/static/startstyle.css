@@ -71,9 +71,13 @@ body {
     float: right;
 }
 
-.table, th, td{
+.table, th, td {
     border: 1px solid black;
     align-self: center;
+}
+
+.restaurantsinfo {
+    width: 100%;
 }
 
 /*Reserve button*/
