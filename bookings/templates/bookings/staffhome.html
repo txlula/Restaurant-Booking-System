@@ -64,22 +64,29 @@
 
     <div class="notifications">
         <h1 align="center">Notifications</h1>
-        <table>
+        <table style="width:100%">
             <tr>
                 <th>Number of people</th>
-                <th>Date</th>
-                <th>Time</th>
+                <th>Date and time</th>
+                <th>Full Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th></th>
             </tr>
-        {% for reservation in reservations %}
             <tr>
+                {% for reservation in reservations %}
                 <td>{{ reservation.no_of_people }}</td>
-                <td>{{ reservation.date_of_booking }}</td>
-                <td>{{ reservation.time_of_booking }}</td>
+                <td>{{ reservation.date_of_booking }}, {{ reservation.time_of_booking }}</td>
+
+                <td>{{ reservation.person.first_name }}, {{ reservation.person.second_name }}</td>
+                <td>{{ reservation.person.phone_no }}</td>
+                <td>{{ reservation.person.email }}</td>
+                {% endfor %}
+
                 <td><form align="center" action="staffhome/">
                 <input class="removebtn" type="submit" value="Remove"/>
                 </form></td>
             </tr>
-        {% endfor %}
         </table>
     </div>
 </body>

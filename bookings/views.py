@@ -13,14 +13,6 @@ from django.contrib import messages
 def start(request):
     restaurants = Restaurant.objects.raw('SELECT * FROM bookings_Restaurant')
     context = {'restaurants' : restaurants}
-    if request.method == 'get':
-        query = request.GET.get('name')
-        if query:
-            restaurants = Restaurant.objects.filter(name=query)
-            context = {'restaurants' : restaurants}
-        else:
-            restaurants = Restaurant.objects.raw('SELECT * FROM bookings_Restaurant')
-            context = {'restaurants' : restaurants}
     return render(request, 'bookings/start.html', context)
 
 #Staff Login Page
@@ -56,6 +48,8 @@ def staffregister(request):
 
 #Staff Home
 def staffhome(request):
+    context = {}
+
     #Implementing notifications using a circular queue
     class Notifications:
         #Implement queue
@@ -83,7 +77,7 @@ def staffhome(request):
             return item
 
     reservations = Reservation.objects.all()
-    context = {'reservations' : reservations}
+    context.update({'reservations' : reservations})
         
     return render(request, 'bookings/staffhome.html', context)
 
