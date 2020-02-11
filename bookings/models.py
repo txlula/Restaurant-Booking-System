@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django import forms
 
 from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.formfields import PhoneNumberField
 from datetime import datetime
 
 from django.contrib.auth.forms import UserCreationForm
@@ -17,7 +18,7 @@ class Restaurant(models.Model):
     rest_max_size = models.PositiveIntegerField()
 
     def __str__(self):
-        return "{}, {}, {}", self.name, self.address, self.phone_no
+        return "{}, {}, {}", self.rest_name, self.rest_address, self.rest_phone_no
 
 #Staff Model
 class Staff(models.Model):
@@ -26,11 +27,10 @@ class Staff(models.Model):
     password = models.CharField(max_length=20)
     staff_first_name = models.CharField(max_length=50)
     staff_second_name = models.CharField(max_length=50)
-    staff_phone_no = PhoneNumberField()
     staff_email = models.EmailField(max_length=200)
 
     def __str__(self):
-        return "{}, {}, {}, {}", self.staff_first_name, self.staff_second_name, self.staff_phone_no, self.staff_email
+        return "{}, {}, {}", self.staff_first_name, self.staff_second_name, self.staff_email
 
     def returnusername(self):
         return self.username
@@ -40,7 +40,7 @@ class Reservation(models.Model):
     reservationID = models.AutoField(primary_key=True, unique=True)
     first_name = models.CharField(max_length=50)
     second_name = models.CharField(max_length=50)
-    phone_no = PhoneField(default="")
+    phone_no = PhoneNumberField()
     email = models.EmailField(max_length=200)
 
     no_of_people = models.PositiveIntegerField()
@@ -76,6 +76,8 @@ class Order(models.Model):
 #Form to reserve with Reservation Model
 class ReserveForm(ModelForm):
     email = forms.EmailField(max_length=200, widget=forms.EmailInput)
+    phone_no = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder' : 'Phone Number'}))
+
     class Meta:
         model = Reservation
         fields = ['no_of_people', 'date_of_booking', 'time_of_booking', 'first_name', 'second_name',
