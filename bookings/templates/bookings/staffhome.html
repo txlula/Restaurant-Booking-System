@@ -78,9 +78,9 @@
                 <td>{{ reservation.no_of_people }}</td>
                 <td>{{ reservation.date_of_booking }}, {{ reservation.time_of_booking }}</td>
 
-                <td>{{ reservation.person.first_name }}, {{ reservation.person.second_name }}</td>
-                <td>{{ reservation.person.phone_no }}</td>
-                <td>{{ reservation.person.email }}</td>
+                <td>{{ reservation.first_name }}, {{ reservation.second_name }}</td>
+                <td>{{ reservation.phone_no }}</td>
+                <td>{{ reservation.email }}</td>
                 {% endfor %}
 
                 <td><form align="center" action="staffhome/">

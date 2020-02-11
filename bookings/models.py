@@ -2,7 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 from django import forms
 
-from phone_field import PhoneField
+from phonenumber_field.modelfields import PhoneNumberField
 from datetime import datetime
 
 from django.contrib.auth.forms import UserCreationForm
@@ -11,49 +11,47 @@ from django.contrib.auth.models import User
 #Restaurant Model
 class Restaurant(models.Model):
     restaurantID = models.AutoField(primary_key=True, unique=True)
-    rest_name = models.CharField(max_length=300)
+    rest_name = models.CharField(max_length=200)
     rest_address = models.TextField()
-    rest_phone_no = PhoneField(default="")
+    rest_phone_no = PhoneNumberField()
     rest_max_size = models.PositiveIntegerField()
 
-    #Display information in string format
     def __str__(self):
         return "{}, {}, {}", self.name, self.address, self.phone_no
 
-#Person Model
-class Person(models.Model):
-    personID = models.AutoField(primary_key=True, unique=True)
-    first_name = models.CharField(max_length=50)
-    second_name = models.CharField(max_length=50)
-    phone_no = PhoneField(default="")
-    email = models.EmailField(max_length=300)
-
-    def __str__(self):
-        return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
-
-#Account Model
-class Account(models.Model):
-    accountID = models.AutoField(primary_key=True, unique=True)
+#Staff Model
+class Staff(models.Model):
+    staffID = models.AutoField(primary_key=True, unique=True)
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
+    staff_first_name = models.CharField(max_length=50)
+    staff_second_name = models.CharField(max_length=50)
+    staff_phone_no = PhoneNumberField()
+    staff_email = models.EmailField(max_length=200)
 
     def __str__(self):
+        return "{}, {}, {}, {}", self.staff_first_name, self.staff_second_name, self.staff_phone_no, self.staff_email
+
+    def returnusername(self):
         return self.username
 
 #Reservation Model
 class Reservation(models.Model):
+    reservationID = models.AutoField(primary_key=True, unique=True)
+    first_name = models.CharField(max_length=50)
+    second_name = models.CharField(max_length=50)
+    phone_no = PhoneField(default="")
+    email = models.EmailField(max_length=200)
+
     no_of_people = models.PositiveIntegerField()
-    date_of_booking = models.DateField(default=datetime.now)
+    date_of_booking = models.DateField(default=(datetime.now))
     time_of_booking = models.TimeField()
-    person = models.OneToOneField(Person, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
         return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking
 
-    def ValidateDate(self):
-        date = self.cleaned_data['date_of_booking']
-        if date < datetime.now():
-            raise forms.ValidationError("Invalid date")
+    def returndetails(self):
+        return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
 
 #Dish Model
 class Dish(models.Model):
@@ -77,25 +75,21 @@ class Order(models.Model):
 
 #Form to reserve with Reservation Model
 class ReserveForm(ModelForm):
+    email = forms.EmailField(max_length=200, widget=forms.EmailInput)
     class Meta:
         model = Reservation
-        fields = ['no_of_people', 'date_of_booking', 'time_of_booking']
+        fields = ['no_of_people', 'date_of_booking', 'time_of_booking', 'first_name', 'second_name',
+                  'phone_no', 'email']
         widgets = { 'no_of_people' : forms.NumberInput(attrs={'placeholder' : 'Number of people dining'}), 
                    'date_of_booking' : forms.SelectDateWidget(attrs={'placeholder' : 'Date of booking'}), 
-                   'time_of_booking' : forms.TimeInput(attrs={'placeholder' : 'Time of booking'}) 
+                   'time_of_booking' : forms.TimeInput(attrs={'placeholder' : 'Time of booking'}),
                    }
-
-#Form for customer's input when reserving
-class CustomerForm(ModelForm):
-    class Meta:
-        model = Person
-        fields = ['first_name', 'second_name', 'phone_no', 'email']
 
 #Form to register staff with Account Model
 class RegisterStaffAccountForm(ModelForm):
     password = forms.CharField(max_length=20, widget=forms.PasswordInput)
     class Meta:
-        model = Account
+        model = Staff
         fields = ['username', 'password']
         widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
                    'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
@@ -103,10 +97,9 @@ class RegisterStaffAccountForm(ModelForm):
 
 #Form to register staff with Python User Authentication System
 class RegisterStaffForm(UserCreationForm):
-    email = forms.EmailField(max_length=300, widget=forms.EmailInput)
+    email = forms.EmailField(max_length=200, widget=forms.EmailInput)
     first_name = forms.CharField(max_length=50)
     second_name = forms.CharField(max_length=50)
-
     class Meta:
         model = User
         fields = ['first_name', 'second_name', 'email']
@@ -116,7 +109,7 @@ class LoginStaffAccountForm(ModelForm):
     username = forms.CharField(max_length=20)
     password = forms.CharField(max_length=20, widget=forms.PasswordInput)
     class Meta:
-        model = Account
+        model = Staff
         fields = ['username', 'password']
         widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
                    'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
