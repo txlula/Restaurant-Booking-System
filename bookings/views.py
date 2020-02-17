@@ -85,15 +85,18 @@ def staffhome(request):
 def reserve(request):
     context = {}
     reserveform = ReserveForm(request.POST)
+    personform = CustomerForm(request.POST)
 
-    if reserveform.is_valid():
+    if reserveform.is_valid() and personform.is_valid():
         Reservation = reserveform.save()
+        Person = personform.save()
         messages.success(request, 'You have reserved a table.')
     else:
         reserveform = ReserveForm()
+        personform = CustomerForm()
     
     messages.info(request, 'Time should be in 24:00 format')
-    context.update({'reserveform' : reserveform})
+    context.update({'reserveform' : reserveform, 'personform': personform})
     return render(request, 'bookings/reserve.html', context)
 
 #Menu Page
