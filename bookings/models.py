@@ -36,16 +36,18 @@ class Account(models.Model):
     accountID = models.AutoField(primary_key=True, unique=True)
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
+    #Person model is linked to account model
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, default="")
 
     def __str__(self):
         return self.username
 
 #Reservation Model
 class Reservation(models.Model):
+    reservationID = models.AutoField(primary_key=True, unique=True)
     no_of_people = models.PositiveIntegerField()
     date_of_booking = models.DateField(default=datetime.now)
     time_of_booking = models.TimeField()
-    person = models.OneToOneField(Person, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
         return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking
@@ -67,13 +69,10 @@ class Order(models.Model):
     order_time = models.DateTimeField()
     order_address = models.TextField()
     #Order model is linked to Dish model
-    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, default="")
 
     def __str__(self):
         return "{}, {}", self.order_time, self.order_address
-
-#Form to search up restaurant by name
-
 
 #Form to reserve with Reservation Model
 class ReserveForm(ModelForm):
