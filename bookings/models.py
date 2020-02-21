@@ -14,6 +14,7 @@ class Restaurant(models.Model):
     rest_name = models.CharField(max_length=300)
     rest_address = models.TextField()
     rest_phone_no = PhoneField(default="")
+    rest_email = models.EmailField(max_length=300, default="")
     rest_max_size = models.PositiveIntegerField()
 
     #Display information in string format
@@ -26,7 +27,7 @@ class Person(models.Model):
     first_name = models.CharField(max_length=50)
     second_name = models.CharField(max_length=50)
     phone_no = PhoneField(default="")
-    email = models.EmailField(max_length=300)
+    email = models.EmailField(max_length=300, unique=True)
 
     def __str__(self):
         return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
@@ -48,9 +49,11 @@ class Reservation(models.Model):
     no_of_people = models.PositiveIntegerField()
     date_of_booking = models.DateField(default=datetime.now)
     time_of_booking = models.TimeField()
+    additional = models.TextField(default="")
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="")
 
     def __str__(self):
-        return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking
+        return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking, self.addtional
 
     def ValidateDate(self):
         date = self.cleaned_data['date_of_booking']
@@ -78,10 +81,11 @@ class Order(models.Model):
 class ReserveForm(ModelForm):
     class Meta:
         model = Reservation
-        fields = ['no_of_people', 'date_of_booking', 'time_of_booking']
+        fields = ['no_of_people', 'date_of_booking', 'time_of_booking', 'additional']
         widgets = { 'no_of_people' : forms.NumberInput(attrs={'placeholder' : 'Number of people dining'}), 
                    'date_of_booking' : forms.SelectDateWidget(attrs={'placeholder' : 'Date of booking'}), 
-                   'time_of_booking' : forms.TimeInput(attrs={'placeholder' : 'Time of booking'}) 
+                   'time_of_booking' : forms.TimeInput(attrs={'placeholder' : 'Time of booking'}),
+                   'additional' : forms.Textarea(attrs={'placeholder' : 'Additional information'})
                    }
 
 #Form for customer's input when reserving

@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic.list import ListView
 
 from bookings.models import *
 
@@ -8,6 +7,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import messages
+
+from django.core.mail import send_mail
 
 #Start Page
 def start(request):
@@ -97,14 +98,31 @@ def remove_reservation(request, reservation_id=None):
         return HttpResponseRedirect("/staffhome")
 
 #Reserve Page
-def reserve(request):
+def reserve(request, restaurant_id=None):
     context = {}
     reserveform = ReserveForm(request.POST)
     personform = CustomerForm(request.POST)
+    restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
 
     if reserveform.is_valid() and personform.is_valid():
+        restaurant_id = Restaurant.objects.get(restaurantID = restaurant_id)
+        #Confirmation of reservation sent by email
+        '''
+        send_mail("Reservation Confirmation", "Dear {} {}, \
+        Thank you for reserving a table for at {}. \
+        Reservation information: \
+        Number of people dining: {} \
+        Date of reservation: {} \
+        Time of reservation: {} \
+        Additional information: {} \
+        Restaurant information: \
+        Restaurant address: {} \
+        Restaurant phone number: {}", )
+        '''
+
         Reservation = reserveform.save()
         Person = personform.save()
+
         messages.success(request, 'You have reserved a table.')
     else:
         reserveform = ReserveForm()
@@ -119,7 +137,6 @@ def menu(request):
     context = {'dishes' : dishes}
 
     AddDish = AddDishForm(request.POST)
-
     if AddDish.is_valid():
         Dish = AddDish.save()
     else:

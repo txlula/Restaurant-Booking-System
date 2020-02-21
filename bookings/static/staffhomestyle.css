@@ -80,6 +80,11 @@ body {
     float: right;
 }
 
+.table, th, td {
+    border: 1px solid black;
+    align-self: center;
+}
+
 /*Remove notification button*/
 .removebtn {
     padding: 10px 20px;

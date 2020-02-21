@@ -48,10 +48,7 @@
             <td>{{ restaurant.rest_address }}</td>
             <td>{{ restaurant.rest_phone_no }}</td>
 
-            <td><form align="center" action="reserve/" method="post">
-                {% csrf_token %}
-                <input class="reservebtn" type="submit" value="Reserve"/>
-                </form></td>
+            <td><a href='reserve/{{restaurant.restaurantID}}/'>Reserve</a></td>
         </tr>
         {% endfor %}
         </table>
