@@ -83,9 +83,18 @@ def staffhome(request):
             return item
 
     reservations = Reservation.objects.all()
+    notification_list = Notifications()
+    for reservation in reservations:
+        notification_list.enqueue(reservation)
+
     context = {'reservations' : reservations}
         
     return render(request, 'bookings/staffhome.html', context)
+
+#Remove reservation function
+def remove_reservation(request, reservation_id=None):
+        r = Reservation.objects.get(reservationID = reservation_id).delete()
+        return HttpResponseRedirect("/staffhome")
 
 #Reserve Page
 def reserve(request):
@@ -101,7 +110,6 @@ def reserve(request):
         reserveform = ReserveForm()
         personform = CustomerForm()
     
-    messages.info(request, 'Time should be in 24:00 format')
     context.update({'reserveform' : reserveform, 'personform': personform})
     return render(request, 'bookings/reserve.html', context)
 

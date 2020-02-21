@@ -45,23 +45,6 @@
         </table>
     </div>
 
-    <div class="calendar">
-        <div class="months">
-            <p>Month</p>
-        </div>
-        <table>
-            <tr>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
-                <th>Saturday</th>
-                <th>Sunday</th>
-            </tr>
-        </table>
-    </div>
-
     <div class="notifications">
         <h1 align="center">Notifications</h1>
         <table>
@@ -75,9 +58,8 @@
                 <td>{{ reservation.no_of_people }}</td>
                 <td>{{ reservation.date_of_booking }}</td>
                 <td>{{ reservation.time_of_booking }}</td>
-                <td><form align="center" action="staffhome/">
-                <input class="removebtn" type="submit" value="Remove"/>
-                </form></td>
+
+                <td><a href='remove/{{reservation.reservationID}}/'>Remove</a></td>
             </tr>
         {% endfor %}
         </table>

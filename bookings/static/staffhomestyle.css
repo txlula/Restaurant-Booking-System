@@ -32,7 +32,7 @@ body {
     border-style: outset;
     border-width: 5px;
     background-color: #33AAFF;
-    width: 700px;
+    width: 600px;
     height: 440px;
     align-items: center;
     float: left;
@@ -43,14 +43,16 @@ body {
     border-style: outset;
     border-width: 5px;
     background-color: #33AAFF;
-    width: 700px;
+    width: 250px;
     height: 440px;
     align-items: center;
-    right: 50px;
+    float: left;
 }
 
 /*Button*/
 .button {
+    align-self: center;
+    padding: 15px 20px;
     font-size: 15px;
     text-decoration: none;
     background-color: black;
@@ -66,22 +68,6 @@ body {
     border: 1px solid black;
 }
 
-/*Calendar block*/
-.calendar {
-    border-style: outset;
-    border-width: 5px;
-    background-color: #33AAFF;
-    width: 300px;
-    height: 220px;
-    align-items: center;
-    float: right;
-}
-
-.table, th, td {
-    border: 1px solid black;
-    align-self: center;
-}
-
 /*Notifications block*/
 .notifications {
     border-style: outset;
@@ -89,8 +75,8 @@ body {
     background-color: #A633FF;
     align-items: center;
     left: 10px;
-    width: 300px;
-    height: 220px;
+    width: 350px;
+    height: 440px;
     float: right;
 }
 
