@@ -50,7 +50,7 @@ class Reservation(models.Model):
     date_of_booking = models.DateField(default=datetime.now)
     time_of_booking = models.TimeField()
     additional = models.TextField(default="")
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="")
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="", null=True)
 
     def __str__(self):
         return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking, self.addtional
