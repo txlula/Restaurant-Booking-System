@@ -1,11 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
 from bookings.models import *
 
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from django.core.mail import send_mail
@@ -25,36 +24,41 @@ def start(request):
     return render(request, 'bookings/start.html', context)
 
 #Staff Login Page
-def staffloginscreen(request):
-    if request.method == 'post':
-        form = AuthenticationForm(data=request.POST)
-
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect('staffhome')
-    else:
-        form = AuthenticationForm()
+def stafflogin(request):
+    next = request.GET.get('next')
+    form = LoginForm(request.POST)
+    if form.is_valid():
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(username = username, password = password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect('/staffhome')
     return render(request, 'bookings/stafflogin.html', {'form' : form})
 
 #Staff Register Page
 def staffregister(request):
-    if request.method == 'post':
-        form = RegisterStaffForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            messages.success(request, 'Account has been created.')
-            return redirect('staffhome')
-    else:
-        form = RegisterStaffForm()
+    next = request.GET.get('next')
+    form = RegisterForm(request.POST)
+    if form.is_valid():
+        user = form.save(commit=False)
+        password = form.cleaned_data.get('password')
+        user.set_password(password)
+        user.save()
+        new = authenticate(username = user.username, password = password)
+        login(request,user)
+        if next:
+            return redirect(next)
+        return redirect('/staffhome')
     return render(request, 'bookings/staffregister.html', {'form' : form})
 
+#Staff Logout Page
+def stafflogout(request):
+    logout(request)
+    return redirect('/')
+
+@login_required
 #Staff Home
 def staffhome(request):
     #Implementing notifications using a circular queue
@@ -102,43 +106,47 @@ def reserve(request, restaurant_id=None):
     context = {}
     reserveform = ReserveForm(request.POST)
     personform = CustomerForm(request.POST)
-    restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
 
-    if reserveform.is_valid() and personform.is_valid():
-        restaurant_id = Restaurant.objects.get(restaurantID = restaurant_id)
-        #Confirmation of reservation sent by email
-        '''
-        send_mail("Reservation Confirmation", "Dear {} {}, \
-        Thank you for reserving a table for at {}. \
-        Reservation information: \
-        Number of people dining: {} \
-        Date of reservation: {} \
-        Time of reservation: {} \
-        Additional information: {} \
-        Restaurant information: \
-        Restaurant address: {} \
-        Restaurant phone number: {}", )
-        '''
+    if reserveform.is_valid():
+        id = reserveform.cleaned_data['restaurant_id']
+        restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
 
         Reservation = reserveform.save()
-        Person = personform.save()
 
-        messages.success(request, 'You have reserved a table.')
+        if personform.is_valid():
+            Person = personform.save()
+            messages.success(request, 'You have reserved a table.')
     else:
         reserveform = ReserveForm()
         personform = CustomerForm()
     
+    #Confirmation of reservation sent by email
+    '''
+    send_mail("Reservation Confirmation", "Dear {} {}, \
+    Thank you for reserving a table for at {}. \
+    Reservation information: \
+    Number of people dining: {} \
+    Date of reservation: {} \
+    Time of reservation: {} \
+    Additional information: {} \
+    Restaurant information: \
+    Restaurant address: {} \
+    Restaurant phone number: {}", )
+    '''
+
     context.update({'reserveform' : reserveform, 'personform': personform})
     return render(request, 'bookings/reserve.html', context)
 
 #Menu Page
 def menu(request):
-    dishes = Dish.objects.raw('SELECT * FROM bookings_Dish')
-    context = {'dishes' : dishes}
+    context = {}
 
     AddDish = AddDishForm(request.POST)
     if AddDish.is_valid():
         Dish = AddDish.save()
     else:
         AddDish = AddDishForm()
-    return render(request, 'bookings/menu.html', context, {'form' : AddDish})
+        dishes = Dish.objects.raw('SELECT * FROM bookings_Dish')
+
+    context.update({'dishes' : dishes, 'form' : AddDish})
+    return render(request, 'bookings/menu.html', context)

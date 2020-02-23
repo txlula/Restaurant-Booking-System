@@ -5,8 +5,9 @@ from django import forms
 from phone_field import PhoneField
 from datetime import datetime
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, get_user_model
+
+User = get_user_model()
 
 #Restaurant Model
 class Restaurant(models.Model):
@@ -34,14 +35,10 @@ class Person(models.Model):
 
 #Account Model
 class Account(models.Model):
-    accountID = models.AutoField(primary_key=True, unique=True)
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
-    #Person model is linked to account model
-    person = models.ForeignKey(Person, on_delete=models.CASCADE, default="")
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
 #Reservation Model
 class Reservation(models.Model):
@@ -94,37 +91,6 @@ class CustomerForm(ModelForm):
         model = Person
         fields = ['first_name', 'second_name', 'phone_no', 'email']
 
-#Form to register staff with Account Model
-class RegisterStaffAccountForm(ModelForm):
-    password = forms.CharField(max_length=20, widget=forms.PasswordInput)
-    class Meta:
-        model = Account
-        fields = ['username', 'password']
-        widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
-                   'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
-                   }
-
-#Form to register staff with Python User Authentication System
-class RegisterStaffForm(UserCreationForm):
-    email = forms.EmailField(max_length=300, widget=forms.EmailInput)
-    first_name = forms.CharField(max_length=50)
-    second_name = forms.CharField(max_length=50)
-
-    class Meta:
-        model = User
-        fields = ['first_name', 'second_name', 'email']
-
-#Form to login staff
-class LoginStaffAccountForm(ModelForm):
-    username = forms.CharField(max_length=20)
-    password = forms.CharField(max_length=20, widget=forms.PasswordInput)
-    class Meta:
-        model = Account
-        fields = ['username', 'password']
-        widgets = { 'username' : forms.TextInput(attrs={'placeholder' : 'Username'}),
-                   'password' : forms.PasswordInput(attrs={'placeholder' : 'Password'})
-                   }
-
 #Form to add dish
 class AddDishForm(ModelForm):
     class Meta:
@@ -133,3 +99,38 @@ class AddDishForm(ModelForm):
         widgets = { 'dish_name' : forms.TextInput(attrs={'placeholder' : 'Dish name'}),
                    'dish_price' : forms.NumberInput(attrs={'placeholder' : 'Price'})
                    }
+
+#Form to login staff
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget = forms.PasswordInput)
+
+    def clean(self, *args, **kwargs):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            user = authenticate(username = username, password = password)
+            if not user:
+                raise forms.ValidationError('This user does not exist')
+            if not user.check_password(password):
+                raise forms.ValidationError('The password is incorrect')
+        return super(LoginForm, self).clean(*args, **kwargs)
+
+#Form to register staff
+class RegisterForm(ModelForm):
+    password = forms.CharField(widget = forms.PasswordInput)
+    first_name = forms.CharField()
+    second_name = forms.CharField()
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'first_name', 'second_name', 'email']
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        e = User.objects.filter(username = username)
+        if e == username:
+            raise forms.ValidationError('This username is not available. Try a different one.')
+        return username

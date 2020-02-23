@@ -15,7 +15,7 @@
 
     <div class="stafflogin">
         <p align="center"><strong>Enter username and password to login.</strong></p>
-        <form align="center" method="post" action="staffhome/">
+        <form align="center" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <input class="staffloginbutton" type="submit" value="Login"/>
