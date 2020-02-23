@@ -40,6 +40,22 @@ body {
     align-content: center;
 }
 
+.Dishes {
+    border-style: outset;
+    border-width: 5px;
+    background-color: lightgray;
+    width: 500px;
+    margin: auto;
+    display: block;
+}
+
+.table, th, td {
+    border: 1px solid black;
+    align-self: center;
+    width: 100%;
+}
+
+
 /*Remove dish button*/
 .removebtn {
     padding: 10px 20px;

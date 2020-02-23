@@ -155,7 +155,6 @@ def menu(request):
         Dish = AddDish.save()
     else:
         AddDish = AddDishForm()
-        dishes = Dish.objects.raw('SELECT * FROM bookings_Dish')
 
-    context.update({'dishes' : dishes, 'form' : AddDish})
+    context.update({'form' : AddDish})
     return render(request, 'bookings/menu.html', context)

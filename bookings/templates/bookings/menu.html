@@ -13,6 +13,7 @@
     </div>
 
     <div class="AddDish">
+        <p align="center">Add Dish</p>
         <form align="center" method="POST" action="menu/">
             {% csrf_token %}
             {{ form.as_p }}
