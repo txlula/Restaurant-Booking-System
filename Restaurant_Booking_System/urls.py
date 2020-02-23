@@ -9,9 +9,9 @@ from bookings.views import staffregister, stafflogin, stafflogout
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^$', views.start, name='start'),
-    path('accounts/register/', staffregister),
-    path('accounts/login/', stafflogin),
-    path('accounts/logout/', stafflogout),
+    re_path(r'accounts/register/$', views.staffregister, name='staffregister'),
+    re_path(r'accounts/login/$', views.stafflogin, name='stafflogin'),
+    re_path(r'accounts/logout/$', views.stafflogout, name='stafflogout'),
     re_path(r'staffhome/$', views.staffhome, name='staffhome'),
     re_path(r'menu/$', views.menu, name='menu'),
     path('stafflogin/staffhome/remove/<int:reservation_id>/', views.remove_reservation, name='remove'),

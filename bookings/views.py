@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
+from django.db.models import F
 from bookings.models import *
 
 from django.contrib.auth import authenticate, get_user_model, login, logout
@@ -42,6 +43,7 @@ def staffregister(request):
     next = request.GET.get('next')
     form = RegisterForm(request.POST)
     if form.is_valid():
+        #Save form data but database is not updated
         user = form.save(commit=False)
         password = form.cleaned_data.get('password')
         user.set_password(password)
@@ -108,10 +110,10 @@ def reserve(request, restaurant_id=None):
     personform = CustomerForm(request.POST)
 
     if reserveform.is_valid():
-        id = reserveform.cleaned_data['restaurant_id']
+        reservation = reserveform.save()
         restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
-
-        Reservation = reserveform.save()
+        reservation.restaurant_id = restaurantID
+        reservation.save(update_fields=['restaurant_id'])
 
         if personform.is_valid():
             Person = personform.save()

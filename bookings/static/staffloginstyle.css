@@ -39,3 +39,12 @@ body {
 .form {
     align-content: center;
 }
+
+.staffregister{
+    border-style: outset;
+    border-width: 5px;
+    background-color: lightgray;
+    width: 500px;
+    margin: auto;
+    display: block;
+}
