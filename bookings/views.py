@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
-from django.db.models import F
 from bookings.models import *
 
 from django.contrib.auth import authenticate, get_user_model, login, logout
@@ -63,6 +62,8 @@ def stafflogout(request):
 @login_required
 #Staff Home
 def staffhome(request):
+    context = {}
+
     #Implementing notifications using a circular queue
     class Notifications:
         #Implement queue
@@ -94,7 +95,7 @@ def staffhome(request):
     for reservation in reservations:
         notification_list.enqueue(reservation)
 
-    context = {'reservations' : reservations}
+    context.update({'reservations' : reservations})
         
     return render(request, 'bookings/staffhome.html', context)
 
@@ -110,13 +111,19 @@ def reserve(request, restaurant_id=None):
     personform = CustomerForm(request.POST)
 
     if reserveform.is_valid():
-        reservation = reserveform.save()
+        reservation = reserveform.save(commit=False)
+        r_id = reserveform.cleaned_data.get('reservationID')
+        reservation.save()
+
         restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
         reservation.restaurant_id = restaurantID
         reservation.save(update_fields=['restaurant_id'])
 
         if personform.is_valid():
-            Person = personform.save()
+            person = personform.save()
+            person.reservation_id = r_id
+            person.save(update_fields=['reservation_id'])
+
             messages.success(request, 'You have reserved a table.')
     else:
         reserveform = ReserveForm()

@@ -22,17 +22,6 @@ class Restaurant(models.Model):
     def __str__(self):
         return "{}, {}, {}", self.name, self.address, self.phone_no
 
-#Person Model
-class Person(models.Model):
-    personID = models.AutoField(primary_key=True, unique=True)
-    first_name = models.CharField(max_length=50)
-    second_name = models.CharField(max_length=50)
-    phone_no = PhoneField(default="")
-    email = models.EmailField(max_length=300, unique=True)
-
-    def __str__(self):
-        return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
-
 #Account Model
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -56,6 +45,18 @@ class Reservation(models.Model):
         date = self.cleaned_data['date_of_booking']
         if date < datetime.now():
             raise forms.ValidationError("Invalid date")
+
+#Person Model
+class Person(models.Model):
+    personID = models.AutoField(primary_key=True, unique=True)
+    first_name = models.CharField(max_length=50)
+    second_name = models.CharField(max_length=50)
+    phone_no = PhoneField(default="")
+    email = models.EmailField(max_length=300, unique=True)
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, default="", null=True)
+
+    def __str__(self):
+        return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
 
 #Dish Model
 class Dish(models.Model):
@@ -113,7 +114,7 @@ class LoginForm(forms.Form):
             user = authenticate(username = username, password = password)
             if not user:
                 raise forms.ValidationError('This user does not exist')
-            if not user.check_password(password):
+            if user and not user.check_password(password):
                 raise forms.ValidationError('The password is incorrect')
         return super(LoginForm, self).clean(*args, **kwargs)
 
