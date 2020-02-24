@@ -17,9 +17,6 @@
 
             <div class="reserveblock">
                 {{ reserveform.as_p }}
-            </div>
-
-            <div class="personblock">
                 {{ personform.as_p }}
                 {% if messages %}
                 <ul class="messages">
@@ -28,9 +25,24 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
+                <input type="submit" value="Reserve"/>
             </div>
-            <input type="submit" value="Reserve"/>
         </form>
-
+        
+        <div class="menublock" align="right">
+            <table width=100%>
+                <tr>
+                    <th>Dish Name</th>
+                    <th>Price</th>
+                </tr>
+            {% for dish in dishes %}
+                <tr>
+                    <td>{{ dish.dish_name }}</td>
+                    <td>{{ dish.dish_price }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+        
 </body>
 </html>

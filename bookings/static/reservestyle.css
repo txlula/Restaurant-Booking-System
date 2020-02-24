@@ -15,18 +15,21 @@ body {
     border-style: outset;
     border-width: 5px;
     background-color: lightgray;
-    width: 500px;
+    width: 600px;
     margin: auto;
     display: block;
+    float: left;
 }
 
-.personblock {
+.menublock {
     border-style: outset;
     border-width: 5px;
-    background-color: lightgray;
-    width: 500px;
-    margin: auto;
-    display: block;
+    background-color: #A633FF;
+    align-items: center;
+    left: 10px;
+    width: 600px;
+    height: 440px;
+    float: right;
 }
 
 .startbutton {

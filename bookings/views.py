@@ -11,16 +11,18 @@ from django.core.mail import send_mail
 
 #Start Page
 def start(request):
-    restaurants = Restaurant.objects.raw('SELECT * FROM bookings_Restaurant')
-    context = {'restaurants' : restaurants}
-    if request.method == 'get':
-        query = request.GET.get('name')
-        if query:
-            restaurants = Restaurant.objects.filter(name=query)
-            context = {'restaurants' : restaurants}
-        else:
-            restaurants = Restaurant.objects.raw('SELECT * FROM bookings_Restaurant')
-            context = {'restaurants' : restaurants}
+    context = {}
+    restaurants = Restaurant.objects.all()
+
+    form = SearchRestaurantForm(request.POST)
+    if form.is_valid():
+        name = form.cleaned_data.get('restaurant_name')
+        restaurants = Restaurant.objects.filter(rest_name = name)
+        context.update({'restaurants' : restaurants, 'form' : form})
+    else:
+        form = SearchRestaurantForm()
+
+    context.update({'restaurants' : restaurants, 'form' : form})
     return render(request, 'bookings/start.html', context)
 
 #Staff Login Page
@@ -149,7 +151,7 @@ def reserve(request, restaurant_id=None):
 #Menu Page
 def menu(request):
     context = {}
-    dishes = Dish.objects.raw('SELECT * FROM bookings_Dish')
+    dishes = Dish.objects.all()
 
     AddDish = AddDishForm(request.POST)
     if AddDish.is_valid():

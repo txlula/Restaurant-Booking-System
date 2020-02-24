@@ -3,7 +3,8 @@ from django.forms import ModelForm
 from django import forms
 
 from phone_field import PhoneField
-from datetime import datetime
+from datetime import datetime, date
+from django.utils import timezone
 
 from django.contrib.auth import authenticate, get_user_model
 
@@ -17,6 +18,7 @@ class Restaurant(models.Model):
     rest_phone_no = PhoneField(default="")
     rest_email = models.EmailField(max_length=300, default="")
     rest_max_size = models.PositiveIntegerField()
+    rest_menu = models.FileField(default="")
 
     #Display information in string format
     def __str__(self):
@@ -41,11 +43,6 @@ class Reservation(models.Model):
     def __str__(self):
         return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking, self.addtional
 
-    def ValidateDate(self):
-        date = self.cleaned_data['date_of_booking']
-        if date < datetime.now():
-            raise forms.ValidationError("Invalid date")
-
 #Person Model
 class Person(models.Model):
     personID = models.AutoField(primary_key=True, unique=True)
@@ -67,13 +64,18 @@ class Dish(models.Model):
 #Order Model
 class Order(models.Model):
     orderID = models.AutoField(primary_key=True, unique=True)
-    order_time = models.DateTimeField()
+    order_date = models.DateField(default=date.today)
+    order_time = models.DateTimeField(default=timezone.now())
     order_address = models.TextField()
     #Order model is linked to Dish model
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, default="")
 
     def __str__(self):
         return "{}, {}", self.order_time, self.order_address
+
+#Form to search up restaurant
+class SearchRestaurantForm(forms.Form):
+    restaurant_name = forms.CharField()
 
 #Form to reserve with Reservation Model
 class ReserveForm(ModelForm):
@@ -85,6 +87,20 @@ class ReserveForm(ModelForm):
                    'time_of_booking' : forms.TimeInput(attrs={'placeholder' : 'Time of booking'}),
                    'additional' : forms.Textarea(attrs={'placeholder' : 'Additional information'})
                    }
+
+        def clean_date(self):
+            date = self.cleaned_data.get('date_of_booking')
+            return date
+
+        def clean_time(self):
+            time = self.cleaned_data.get('time_of_booking')
+            return time
+
+        def clean_people(self):
+            number = self.cleaned_data.get('no_of_people')
+            if number <= 0:
+                raise forms.ValidationError('Number is invalid')
+            return number
 
 #Form for customer's input when reserving
 class CustomerForm(ModelForm):
@@ -112,7 +128,8 @@ class LoginForm(forms.Form):
 
         if username and password:
             user = authenticate(username = username, password = password)
-            if not user:
+            u = User.objects.filter(username = username)
+            if u != username:
                 raise forms.ValidationError('This user does not exist')
             if user and not user.check_password(password):
                 raise forms.ValidationError('The password is incorrect')
