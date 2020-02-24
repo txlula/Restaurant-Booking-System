@@ -17,6 +17,7 @@
         <form align="center" method="POST" action="menu/">
             {% csrf_token %}
             {{ form.as_p }}
+            <input type="submit" value="Add dish"/>
         </form>
     </div>
 
@@ -37,9 +38,7 @@
             <td>{{ dish.dish_name }}</td>
             <td>{{ dish.dish_price }}</td>
 
-            <td><form align="center" action="menu/" method="get">
-                <input class="removebtn" type="submit" value="Remove"/>
-                </form></td>
+            <td><a href='remove/{{dish.dishID}}/'>Remove</a></td>
         </tr>
         {% endfor %}
         </table>

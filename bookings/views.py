@@ -149,12 +149,18 @@ def reserve(request, restaurant_id=None):
 #Menu Page
 def menu(request):
     context = {}
+    dishes = Dish.objects.raw('SELECT * FROM bookings_Dish')
 
     AddDish = AddDishForm(request.POST)
     if AddDish.is_valid():
-        Dish = AddDish.save()
+        dish = AddDish.save()
     else:
         AddDish = AddDishForm()
 
-    context.update({'form' : AddDish})
+    context.update({'form' : AddDish, 'dishes' : dishes})
     return render(request, 'bookings/menu.html', context)
+
+#Remove dish function
+def remove_dish(request, dish_id=None):
+        d = Dish.objects.get(dishID = dish_id).delete()
+        return HttpResponseRedirect("/menu")

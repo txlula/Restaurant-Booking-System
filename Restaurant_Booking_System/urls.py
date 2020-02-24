@@ -16,4 +16,5 @@ urlpatterns = [
     re_path(r'menu/$', views.menu, name='menu'),
     path('stafflogin/staffhome/remove/<int:reservation_id>/', views.remove_reservation, name='remove'),
     path('reserve/<int:restaurant_id>/', views.reserve, name='reserve'),
+    path(r'menu/remove/<int:dishID>/', views.remove_dish, name='removedish')
 ]
