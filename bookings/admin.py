@@ -4,7 +4,7 @@ from .models import *
 
 admin.site.register(Restaurant)
 admin.site.register(Reservation)
-admin.site.register(Person)
+admin.site.register(Customer)
 admin.site.register(Dish)
 admin.site.register(Order)
-admin.site.register(Account)
+admin.site.register(Staff)

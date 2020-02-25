@@ -122,9 +122,9 @@ def reserve(request, restaurant_id=None):
         reservation.save(update_fields=['restaurant_id'])
 
         if personform.is_valid():
-            person = personform.save()
-            person.reservation_id = r_id
-            person.save(update_fields=['reservation_id'])
+            customer = personform.save()
+            customer.reservation_id = r_id
+            customer.save(update_fields=['reservation_id'])
 
             messages.success(request, 'You have reserved a table.')
     else:

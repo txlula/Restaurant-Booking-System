@@ -10,6 +10,13 @@ from django.contrib.auth import authenticate, get_user_model
 
 User = get_user_model()
 
+#Account Model
+class Staff(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+
 #Restaurant Model
 class Restaurant(models.Model):
     restaurantID = models.AutoField(primary_key=True, unique=True)
@@ -17,19 +24,13 @@ class Restaurant(models.Model):
     rest_address = models.TextField()
     rest_phone_no = PhoneField(default="")
     rest_email = models.EmailField(max_length=300, default="")
-    rest_max_size = models.PositiveIntegerField()
+    rest_max_size = models.PositiveIntegerField(default=0)
     rest_menu = models.ImageField()
+    staff = models.ManyToManyField(Staff)
 
     #Display information in string format
     def __str__(self):
         return "{}, {}, {}", self.name, self.address, self.phone_no
-
-#Account Model
-class Account(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
 
 #Reservation Model
 class Reservation(models.Model):
@@ -44,13 +45,13 @@ class Reservation(models.Model):
         return "{}, {}, {}", self.no_of_people, self.date_of_booking, self.time_of_booking, self.addtional
 
 #Person Model
-class Person(models.Model):
-    personID = models.AutoField(primary_key=True, unique=True)
+class Customer(models.Model):
+    customerID = models.AutoField(primary_key=True, unique=True)
     first_name = models.CharField(max_length=50)
     second_name = models.CharField(max_length=50)
     phone_no = PhoneField(default="")
     email = models.EmailField(max_length=300, unique=True)
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, default="", null=True)
+    reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE, default="", null=True)
 
     def __str__(self):
         return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
@@ -105,7 +106,7 @@ class ReserveForm(ModelForm):
 #Form for customer's input when reserving
 class CustomerForm(ModelForm):
     class Meta:
-        model = Person
+        model = Customer
         fields = ['first_name', 'second_name', 'phone_no', 'email']
 
 #Form to add dish
