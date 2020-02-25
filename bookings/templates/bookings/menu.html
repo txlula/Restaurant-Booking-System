@@ -3,8 +3,12 @@
     <title></title>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'menustyle.css' %}" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
+
+    {% load crispy_forms_tags %}
+
     <div class="navbar">
         <h1 align="center"><b>Menu</b></h1>
         <form align="right" action="/staffhome">
@@ -16,8 +20,17 @@
         <p align="center">Add Dish</p>
         <form align="center" method="POST" action="menu/">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ AddDish|crispy }}
             <input type="submit" value="Add dish"/>
+        </form>
+    </div>
+
+    <div class="AddMenu">
+        <p align="center">Add Menu</p>
+        <form align="center" method="POST" action="menu/">
+            {% csrf_token %}
+            {{ AddMenu|crispy  }}
+            <input type="submit" value="Upload menu"/>
         </form>
     </div>
 

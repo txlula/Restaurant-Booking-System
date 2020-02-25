@@ -72,8 +72,9 @@ body {
 }
 
 .table, th, td {
-    border: 1px solid black;
+    border: 3px solid black;
     align-self: center;
+    background-color: white;
 }
 
 .restaurantsinfo {

@@ -3,9 +3,13 @@
     <title>Login</title>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'staffloginstyle.css' %}" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 
 <body>
+
+    {% load crispy_forms_tags %}
+
     <div class="navbar">
         <h1 align="center"><b>Staff Login Page</b></h1>
         <form align="right" action="/">
@@ -17,7 +21,7 @@
         <p align="center"><strong>Enter username and password to login.</strong></p>
         <form align="center" method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form|crispy }}
             <input class="staffloginbutton" type="submit" value="Login"/>
         </form>
     </div>

@@ -39,7 +39,6 @@ def stafflogin(request):
 
 #Staff Register Page
 def staffregister(request):
-    next = request.GET.get('next')
     form = RegisterForm(request.POST)
     if form.is_valid():
         #Save form data but database is not updated
@@ -49,8 +48,6 @@ def staffregister(request):
         user.save()
         new = authenticate(username = user.username, password = password)
         login(request,user)
-        if next:
-            return redirect(next)
         return redirect('/staffhome')
     return render(request, 'bookings/staffregister.html', {'form' : form})
 
@@ -147,7 +144,7 @@ def reserve(request, restaurant_id=None):
     return render(request, 'bookings/reserve.html', context)
 
 #Menu Page
-def menu(request):
+def menu(request, restaurant_id=None):
     context = {}
     dishes = Dish.objects.all()
 
@@ -157,7 +154,13 @@ def menu(request):
     else:
         AddDish = AddDishForm()
 
-    context.update({'form' : AddDish, 'dishes' : dishes})
+    AddMenu = AddMenuFile(request.POST, request.FILES)
+    if AddMenu.is_valid():
+        data = AddMenu.save(commit=False)
+        image = AddMenu.cleaned_data.get('menu')
+        data.save(update_fields=['rest_menu'])
+
+    context.update({'AddDish' : AddDish, 'AddMenu' : AddMenu, 'dishes' : dishes})
     return render(request, 'bookings/menu.html', context)
 
 #Remove dish function

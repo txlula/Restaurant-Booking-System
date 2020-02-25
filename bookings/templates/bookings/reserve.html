@@ -3,8 +3,12 @@
     <title>Home</title>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'reservestyle.css' %}" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
+
+    {% load crispy_forms_tags %}
+
     <div class="navbar">
         <h1 align="center"><b>Reserve</b></h1>
         <form align="right" action="/">
@@ -16,8 +20,8 @@
             {% csrf_token %}
 
             <div class="reserveblock">
-                {{ reserveform.as_p }}
-                {{ personform.as_p }}
+                {{ reserveform|crispy }}
+                {{ personform|crispy}}
                 {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}

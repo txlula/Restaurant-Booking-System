@@ -31,22 +31,31 @@ body {
     border-style: outset;
     border-width: 5px;
     background-color: lightgray;
-    width: 500px;
+    width: 600px;
     margin: auto;
     display: block;
+    float: left;
 }
 
-.form {
-    align-content: center;
+.AddMenu {
+    border-style: outset;
+    border-width: 5px;
+    background-color: lightgray;
+    width: 600px;
+    margin: auto;
+    display: block;
+    float: right;
 }
 
 .Dishes {
     border-style: outset;
     border-width: 5px;
     background-color: lightgray;
-    width: 500px;
+    width: 800px;
+    height: 400px;
     margin: auto;
     display: block;
+    clear: left;
 }
 
 .table, th, td {

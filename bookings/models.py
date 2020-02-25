@@ -22,10 +22,10 @@ class Restaurant(models.Model):
     restaurantID = models.AutoField(primary_key=True, unique=True)
     rest_name = models.CharField(max_length=300)
     rest_address = models.TextField()
-    rest_phone_no = PhoneField(default="", null=True)
-    rest_email = models.EmailField(max_length=300, default="", null=True)
+    rest_phone_no = PhoneField(blank=True, null=True)
+    rest_email = models.EmailField(max_length=300, blank=True, null=True)
     rest_max_size = models.PositiveIntegerField(default=0)
-    rest_menu = models.ImageField()
+    rest_menu = models.ImageField(upload_to = 'menus',null=True, blank=True)
     staff = models.ManyToManyField(Staff)
 
     #Display information in string format
@@ -38,7 +38,7 @@ class Reservation(models.Model):
     no_of_people = models.PositiveIntegerField()
     date_of_booking = models.DateField()
     time_of_booking = models.TimeField()
-    additional = models.TextField(default="", null=True)
+    additional = models.TextField(blank=True, null=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="", null=True)
 
     def __str__(self):
@@ -49,9 +49,9 @@ class Customer(models.Model):
     customerID = models.AutoField(primary_key=True, unique=True)
     first_name = models.CharField(max_length=50)
     second_name = models.CharField(max_length=50)
-    phone_no = PhoneField(default="", null=True)
+    phone_no = PhoneField(blank=True, null=True)
     email = models.EmailField(max_length=300, unique=True, null=True)
-    reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE, default="", null=True)
+    reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return "{}, {}, {}, {}", self.first_name, self.second_name, self.phone_no, self.email
@@ -66,10 +66,10 @@ class Dish(models.Model):
 class Order(models.Model):
     orderID = models.AutoField(primary_key=True, unique=True)
     order_date = models.DateField(default=date.today)
-    order_time = models.DateTimeField()
+    order_time = models.DateTimeField(auto_now_add=True)
     order_address = models.TextField()
     #Order model is linked to Dish model
-    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, default="")
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
         return "{}, {}", self.order_time, self.order_address
@@ -129,20 +129,6 @@ class AddMenuFile(ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget = forms.PasswordInput)
-
-    '''
-    def clean(self, *args, **kwargs):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
-
-        if username and password:
-            user = authenticate(username = username, password = password)
-            if user is not None:
-                raise forms.ValidationError('This user does not exist')
-            if user and not user.check_password(password):
-                raise forms.ValidationError('The password is incorrect')
-        return super(LoginForm, self).clean(*args, **kwargs)
-    '''
 
 #Form to register staff
 class RegisterForm(ModelForm):
