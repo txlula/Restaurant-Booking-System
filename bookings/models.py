@@ -22,8 +22,8 @@ class Restaurant(models.Model):
     restaurantID = models.AutoField(primary_key=True, unique=True)
     rest_name = models.CharField(max_length=300)
     rest_address = models.TextField()
-    rest_phone_no = PhoneField(default="")
-    rest_email = models.EmailField(max_length=300, default="")
+    rest_phone_no = PhoneField(default="", null=True)
+    rest_email = models.EmailField(max_length=300, default="", null=True)
     rest_max_size = models.PositiveIntegerField(default=0)
     rest_menu = models.ImageField()
     staff = models.ManyToManyField(Staff)
@@ -38,7 +38,7 @@ class Reservation(models.Model):
     no_of_people = models.PositiveIntegerField()
     date_of_booking = models.DateField()
     time_of_booking = models.TimeField()
-    additional = models.TextField(default="")
+    additional = models.TextField(default="", null=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="", null=True)
 
     def __str__(self):
@@ -49,8 +49,8 @@ class Customer(models.Model):
     customerID = models.AutoField(primary_key=True, unique=True)
     first_name = models.CharField(max_length=50)
     second_name = models.CharField(max_length=50)
-    phone_no = PhoneField(default="")
-    email = models.EmailField(max_length=300, unique=True)
+    phone_no = PhoneField(default="", null=True)
+    email = models.EmailField(max_length=300, unique=True, null=True)
     reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE, default="", null=True)
 
     def __str__(self):
@@ -130,18 +130,19 @@ class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget = forms.PasswordInput)
 
+    '''
     def clean(self, *args, **kwargs):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
         if username and password:
             user = authenticate(username = username, password = password)
-            u = User.objects.filter(username = username)
-            if u != username:
+            if user is not None:
                 raise forms.ValidationError('This user does not exist')
             if user and not user.check_password(password):
                 raise forms.ValidationError('The password is incorrect')
         return super(LoginForm, self).clean(*args, **kwargs)
+    '''
 
 #Form to register staff
 class RegisterForm(ModelForm):

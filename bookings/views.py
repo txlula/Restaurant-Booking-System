@@ -27,16 +27,14 @@ def start(request):
 
 #Staff Login Page
 def stafflogin(request):
-    next = request.GET.get('next')
     form = LoginForm(request.POST)
     if form.is_valid():
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
-        user = authenticate(username = username, password = password)
-        login(request, user)
-        if next:
-            return redirect(next)
-        return redirect('/staffhome')
+        user = authenticate(request, username = username, password = password)
+        if user is not None:
+            login(request, user)
+            return redirect('/staffhome')
     return render(request, 'bookings/stafflogin.html', {'form' : form})
 
 #Staff Register Page
@@ -163,6 +161,6 @@ def menu(request):
     return render(request, 'bookings/menu.html', context)
 
 #Remove dish function
-def remove_dish(request, dish_id=None):
+def remove_dish(request, dish_id):
         d = Dish.objects.get(dishID = dish_id).delete()
         return HttpResponseRedirect("/menu")
