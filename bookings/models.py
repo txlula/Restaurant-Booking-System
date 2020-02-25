@@ -18,7 +18,7 @@ class Restaurant(models.Model):
     rest_phone_no = PhoneField(default="")
     rest_email = models.EmailField(max_length=300, default="")
     rest_max_size = models.PositiveIntegerField()
-    rest_menu = models.FileField(default="")
+    rest_menu = models.ImageField()
 
     #Display information in string format
     def __str__(self):
@@ -35,7 +35,7 @@ class Account(models.Model):
 class Reservation(models.Model):
     reservationID = models.AutoField(primary_key=True, unique=True)
     no_of_people = models.PositiveIntegerField()
-    date_of_booking = models.DateField(default=datetime.now)
+    date_of_booking = models.DateField()
     time_of_booking = models.TimeField()
     additional = models.TextField(default="")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="", null=True)
@@ -65,7 +65,7 @@ class Dish(models.Model):
 class Order(models.Model):
     orderID = models.AutoField(primary_key=True, unique=True)
     order_date = models.DateField(default=date.today)
-    order_time = models.DateTimeField(default=timezone.now())
+    order_time = models.DateTimeField()
     order_address = models.TextField()
     #Order model is linked to Dish model
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE, default="")
@@ -116,6 +116,13 @@ class AddDishForm(ModelForm):
         widgets = { 'dish_name' : forms.TextInput(attrs={'placeholder' : 'Dish name'}),
                    'dish_price' : forms.NumberInput(attrs={'placeholder' : 'Price'})
                    }
+
+#Form to upload menu file
+class AddMenuFile(ModelForm):
+    class Meta:
+        model = Restaurant
+        fields = ['rest_menu']
+        widgets = {'rest_menu' : forms.ClearableFileInput(attrs={'multiple': True})}
 
 #Form to login staff
 class LoginForm(forms.Form):
