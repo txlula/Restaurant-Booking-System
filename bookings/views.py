@@ -7,16 +7,17 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from django.core.mail import send_mail
 
 #Start Page
 def start(request):
     context = {}
     restaurants = Restaurant.objects.all()
 
+    #Searching restaurant form
     form = SearchRestaurantForm(request.POST)
     if form.is_valid():
         name = form.cleaned_data.get('restaurant_name')
+        #If the name the user has inputted is in the database, the restaurant information will be displayed
         restaurants = Restaurant.objects.filter(rest_name = name)
         context.update({'restaurants' : restaurants, 'form' : form})
     else:
@@ -27,10 +28,12 @@ def start(request):
 
 #Staff Login Page
 def stafflogin(request):
+    #Login form
     form = LoginForm(request.POST)
     if form.is_valid():
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
+        #If the username and password inputted is in the database, the user can login
         user = authenticate(request, username = username, password = password)
         if user is not None:
             login(request, user)
@@ -39,21 +42,43 @@ def stafflogin(request):
 
 #Staff Register Page
 def staffregister(request):
-    form = RegisterForm(request.POST)
-    if form.is_valid():
+    context = {}
+    #Register form that saves to Staff and Restaurant model
+    registerform = RegisterForm(request.POST)
+    restinfoform = RestaurantInfoForm(request.POST)
+
+    if registerform.is_valid() and restinfoform.is_valid():
         #Save form data but database is not updated
-        user = form.save(commit=False)
-        password = form.cleaned_data.get('password')
-        user.set_password(password)
-        user.save()
-        new = authenticate(username = user.username, password = password)
-        login(request,user)
-        return redirect('/staffhome')
-    return render(request, 'bookings/staffregister.html', {'form' : form})
+        info = restinfoform.save(commit=False)
+        id = restinfoform.cleaned_data.get('restaurantID')
+        info.save()
+
+        #Save form data but database is not updated
+        user = registerform.save(commit=False)
+        #Check if username is unique
+        username = registerform.cleaned_data.get('username')
+        e = User.objects.filter(username = username)
+        if e == username:
+            messages.error(request, 'This username is not available. Try a different one.')
+        else:
+            password = registerform.cleaned_data.get('password')
+            user.set_password(password)
+            user.save()
+            #The user wil automatically be redirected to the staff home page
+            new = authenticate(username = user.username, password = password)
+            login(request,user)
+            return redirect('/staffhome')
+    else:
+        registerform = RegisterForm()
+        restinforform = RestaurantInfoForm()
+
+    context.update({'registerform' : registerform, 'restinfoform' : restinfoform})
+    return render(request, 'bookings/staffregister.html', context)
 
 #Staff Logout Page
 def stafflogout(request):
     logout(request)
+    #Redirects user to start page
     return redirect('/')
 
 @login_required
@@ -87,8 +112,10 @@ def staffhome(request):
             self.front = (self.front + 1) % self.maxSize
             return item
 
-    reservations = Reservation.objects.all()
+    #List of reservations is ordered by date of booking
+    reservations = Reservation.objects.all().order_by('date_of_booking')
     notification_list = Notifications()
+    #Reservation is added to queue
     for reservation in reservations:
         notification_list.enqueue(reservation)
 
@@ -96,74 +123,81 @@ def staffhome(request):
         
     return render(request, 'bookings/staffhome.html', context)
 
+@login_required
 #Remove reservation function
 def remove_reservation(request, reservation_id=None):
+        #The reservation id is searched in the database
+        #The reservation is deleted from the database
         r = Reservation.objects.get(reservationID = reservation_id).delete()
         return HttpResponseRedirect("/staffhome")
 
 #Reserve Page
 def reserve(request, restaurant_id=None):
     context = {}
+    #Form to save information to Customer and Reservation model
     reserveform = ReserveForm(request.POST)
     personform = CustomerForm(request.POST)
 
-    if reserveform.is_valid():
+    if reserveform.is_valid() and personform.is_valid():
         reservation = reserveform.save(commit=False)
+        customer = personform.save()
+
+        #The reservation id is saved to the customer model
         r_id = reserveform.cleaned_data.get('reservationID')
-        reservation.save()
+        customer.reservation_id = r_id
+        customer.save(update_fields=['reservation_id'])
 
-        restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
-        reservation.restaurant_id = restaurantID
-        reservation.save(update_fields=['restaurant_id'])
+        #Validation to check if number of people inputted is 0
+        people = reserveform.cleaned_data.get('no_of_people')
+        if people <= 0:
+            messages.error(request, 'Number cannot be 0')
+        else:
+            reservation.save()
 
-        if personform.is_valid():
-            customer = personform.save()
-            customer.reservation_id = r_id
-            customer.save(update_fields=['reservation_id'])
+            #The restaurant id is saved to the reservation model
+            restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
+            reservation.restaurant_id = restaurantID
+            reservation.save(update_fields=['restaurant_id'])
 
+            #The customer has successfully reserved a table if the validation test passes
             messages.success(request, 'You have reserved a table.')
     else:
         reserveform = ReserveForm()
         personform = CustomerForm()
-    
-    #Confirmation of reservation sent by email
-    '''
-    send_mail("Reservation Confirmation", "Dear {} {}, \
-    Thank you for reserving a table for at {}. \
-    Reservation information: \
-    Number of people dining: {} \
-    Date of reservation: {} \
-    Time of reservation: {} \
-    Additional information: {} \
-    Restaurant information: \
-    Restaurant address: {} \
-    Restaurant phone number: {}", )
-    '''
 
     context.update({'reserveform' : reserveform, 'personform': personform})
     return render(request, 'bookings/reserve.html', context)
 
+@login_required
 #Menu Page
 def menu(request, restaurant_id=None):
     context = {}
+    #Shows list of dishes
     dishes = Dish.objects.all()
 
+    #Form to add dish
     AddDish = AddDishForm(request.POST)
     if AddDish.is_valid():
         dish = AddDish.save()
     else:
         AddDish = AddDishForm()
 
+    #Form to add menu
     AddMenu = AddMenuFile(request.POST, request.FILES)
-    if AddMenu.is_valid():
-        data = AddMenu.save(commit=False)
-        image = AddMenu.cleaned_data.get('menu')
-        data.save(update_fields=['rest_menu'])
 
     context.update({'AddDish' : AddDish, 'AddMenu' : AddMenu, 'dishes' : dishes})
     return render(request, 'bookings/menu.html', context)
 
+@login_required
 #Remove dish function
 def remove_dish(request, dish_id):
         d = Dish.objects.get(dishID = dish_id).delete()
         return HttpResponseRedirect("/menu")
+
+@login_required
+#Restaurant Information Page
+def restaurant_info(request):
+    context = {}
+    form = RestaurantInfoForm(request.POST)
+    context.update({'form' : form})
+    return render(request, 'bookings/restaurantinfo.html', context)

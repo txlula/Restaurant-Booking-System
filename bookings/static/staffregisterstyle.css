@@ -21,16 +21,16 @@ body {
     border: 1px solid white;
 }
 
-    .startbutton:hover {
-        background-color: white;
-        color: black;
-        border: 1px solid black;
-    }
+.startbutton:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
 
 .staffregister {
     border-style: outset;
     border-width: 5px;
     background-color: lightgray;
-    width: 400px;
+    width: 800px;
     margin: auto;
 }

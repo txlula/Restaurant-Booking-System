@@ -27,7 +27,8 @@ body {
     border: 1px solid black;
 }
 
-.stafflogin {
+
+.info {
     border-style: outset;
     border-width: 5px;
     background-color: lightgray;
@@ -38,13 +39,4 @@ body {
 
 .form {
     align-content: center;
-}
-
-.staffregister{
-    border-style: outset;
-    border-width: 5px;
-    background-color: lightgray;
-    width: 800px;
-    margin: auto;
-    display: block;
 }

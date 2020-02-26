@@ -27,8 +27,8 @@ body {
     border: 1px solid black;
 }
 
-/*Table layout block*/
-.tablelayout {
+/*Calendar block*/
+.calendar {
     border-style: outset;
     border-width: 5px;
     background-color: #33AAFF;

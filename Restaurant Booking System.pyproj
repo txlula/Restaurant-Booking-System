@@ -47,12 +47,14 @@
   <ItemGroup>
     <Content Include="bookings\static\menustyle.css" />
     <Content Include="bookings\static\reservestyle.css" />
+    <Content Include="bookings\static\restaurantinfostyle.css" />
     <Content Include="bookings\static\staffhomestyle.css" />
     <Content Include="bookings\static\staffloginstyle.css" />
     <Content Include="bookings\static\staffregisterstyle.css" />
     <Content Include="bookings\static\startstyle.css" />
     <Content Include="bookings\templates\bookings\menu.html" />
     <Content Include="bookings\templates\bookings\reserve.html" />
+    <Content Include="bookings\templates\bookings\restaurantinfo.html" />
     <Content Include="bookings\templates\bookings\staffhome.html" />
     <Content Include="bookings\templates\bookings\stafflogin.html" />
     <Content Include="bookings\templates\bookings\staffregister.html" />

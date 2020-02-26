@@ -18,15 +18,22 @@
     </div>
 
     <div class="staffregister">
-        <p align="center"><strong>Fill out this form to create an account.</strong></p>
+        <h3 align="center"><strong>Fill out this form to create an account.</strong></h3>
         <form align="center" method="post">
             {% csrf_token %}
-            {{ form|crispy }}
+            {{ registerform|crispy }}
+
+        <h3 align="center"><strong>Enter restaurant information here.</strong></h3>
+            {{ restinfoform|crispy }}
+
             {% if messages %}
+            <ul class="messages">
                 {% for message in messages %}
-                    {{ message }}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %} >{{ message }}</li>
                 {% endfor %}
+            </ul>
             {% endif %}
+
             <input class="staffregisterbutton" type="submit" value="Register"/>
         </form>
     </div>

@@ -10,13 +10,6 @@ from django.contrib.auth import authenticate, get_user_model
 
 User = get_user_model()
 
-#Account Model
-class Staff(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
-
 #Restaurant Model
 class Restaurant(models.Model):
     restaurantID = models.AutoField(primary_key=True, unique=True)
@@ -25,18 +18,25 @@ class Restaurant(models.Model):
     rest_phone_no = PhoneField(blank=True, null=True)
     rest_email = models.EmailField(max_length=300, blank=True, null=True)
     rest_max_size = models.PositiveIntegerField(default=0)
-    rest_menu = models.ImageField(upload_to = 'menus',null=True, blank=True)
-    staff = models.ManyToManyField(Staff)
+    rest_menu = models.ImageField(upload_to = 'menus', null=True, blank=True)
 
     #Display information in string format
     def __str__(self):
         return "{}, {}, {}", self.name, self.address, self.phone_no
 
+#Account Model
+class Staff(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="")
+
+    def __str__(self):
+        return self.user.username
+
 #Reservation Model
 class Reservation(models.Model):
     reservationID = models.AutoField(primary_key=True, unique=True)
     no_of_people = models.PositiveIntegerField()
-    date_of_booking = models.DateField()
+    date_of_booking = models.DateField(default=datetime.now)
     time_of_booking = models.TimeField()
     additional = models.TextField(blank=True, null=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, default="", null=True)
@@ -89,20 +89,6 @@ class ReserveForm(ModelForm):
                    'additional' : forms.Textarea(attrs={'placeholder' : 'Additional information'})
                    }
 
-        def clean_date(self):
-            date = self.cleaned_data.get('date_of_booking')
-            return date
-
-        def clean_time(self):
-            time = self.cleaned_data.get('time_of_booking')
-            return time
-
-        def clean_people(self):
-            number = self.cleaned_data.get('no_of_people')
-            if number <= 0:
-                raise forms.ValidationError('Number is invalid')
-            return number
-
 #Form for customer's input when reserving
 class CustomerForm(ModelForm):
     class Meta:
@@ -141,9 +127,11 @@ class RegisterForm(ModelForm):
         model = User
         fields = ['username', 'password', 'first_name', 'second_name', 'email']
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        e = User.objects.filter(username = username)
-        if e == username:
-            raise forms.ValidationError('This username is not available. Try a different one.')
-        return username
+#Form to input information for restaurant
+class RestaurantInfoForm(ModelForm):
+    class Meta:
+        model = Restaurant
+        fields = ['rest_name', 'rest_address', 'rest_phone_no', 'rest_email', 'rest_max_size', 'rest_menu']
+        widgets = {'rest_name' : forms.TextInput(attrs={'placeholder' : 'Restaurant name'}),
+                 'rest_address' : forms.Textarea(attrs={'placeholder' : 'Restaurant address'}),
+                 }
