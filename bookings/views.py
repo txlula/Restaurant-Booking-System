@@ -142,17 +142,17 @@ def reserve(request, restaurant_id=None):
         reservation = reserveform.save(commit=False)
         customer = personform.save()
 
-        #The reservation id is saved to the customer model
-        r_id = reserveform.cleaned_data.get('reservationID')
-        customer.reservation_id = r_id
-        customer.save(update_fields=['reservation_id'])
-
         #Validation to check if number of people inputted is 0
         people = reserveform.cleaned_data.get('no_of_people')
         if people <= 0:
             messages.error(request, 'Number cannot be 0')
         else:
+            r_id = reserveform.cleaned_data.get('reservationID')
             reservation.save()
+
+            #The reservation id is saved to the customer model
+            customer.reservation_id = r_id
+            customer.save(update_fields=['reservation_id'])
 
             #The restaurant id is saved to the reservation model
             restaurantID = Restaurant.objects.get(restaurantID = restaurant_id)
