@@ -44,14 +44,11 @@
         <tr>
             <th>Dish Name</th>
             <th>Price</th>
-            <th></th>
         </tr>
         {% for dish in dishes %}
         <tr>
             <td>{{ dish.dish_name }}</td>
             <td>{{ dish.dish_price }}</td>
-
-            <td><a href='remove/{{dish.dishID}}/'>Remove</a></td>
         </tr>
         {% endfor %}
         </table>
